@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tajriba-sinov holati</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --surface-2:#F4F2EC;
+    --ink:#1E2422; --muted:#67736E; --line:#E3DFD6; --line-2:#CFC9BC;
+    --accent:#2F6F5E; --accent-ink:#FFFFFF; --accent-soft:#E7EFEB;
+    --warn:#8A5A2B; --warn-soft:#F6EEE2;
+    --serif:"Spectral",Georgia,"Times New Roman",serif;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    color-scheme:light;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
+      --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
+      --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
+      --warn:#D7A76A; --warn-soft:#2A2319;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
+    --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
+    --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
+    --warn:#D7A76A; --warn-soft:#2A2319;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.55}
+  [hidden]{display:none!important}
+  .wrap{max-width:860px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
+
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(24px,5.5vw,31px);
+     line-height:1.2; text-wrap:balance; margin:28px 0 4px}
+  h2{font-family:var(--serif); font-weight:600; font-size:19px; margin:30px 0 10px}
+  .kicker{font-size:12px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; margin:0}
+  p{margin:0 0 12px; max-width:62ch}
+  .muted{color:var(--muted)}
+  .small{font-size:14px}
+
+  button, select{font:inherit; border-radius:7px; border:1px solid var(--line-2);
+    background:var(--surface); color:var(--ink); padding:9px 14px}
+  button{cursor:pointer}
+  button.asosiy{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
+  button[disabled]{opacity:.5; cursor:not-allowed}
+  button:focus-visible, select:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .asboblar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0 6px}
+  .asboblar label{font-size:13px; font-weight:600; color:var(--muted)}
+
+  table{border-collapse:collapse; width:100%; font-size:15px}
+  th,td{text-align:start; padding:9px 8px; border-bottom:1px solid var(--line)}
+  th{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600}
+  td.son, th.son{text-align:end; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+  td.kod{font-family:var(--mono); font-weight:500; white-space:nowrap}
+  td.belgi{text-align:center; font-family:var(--mono)}
+  th.belgi{text-align:center}
+  .tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+  .tbl-wrap table{font-size:14px}
+  .tbl-wrap th{position:sticky; top:0; background:var(--surface)}
+  tr.jami td{font-weight:600; border-top:2px solid var(--line-2)}
+  @media (max-width:560px){
+    .col-turi{display:none}
+    th,td{padding:9px 5px}
+  }
+
+  .bor{color:var(--accent); font-weight:600}
+  .yoq{color:var(--muted)}
+  .chip{display:inline-block; font-size:12px; padding:1px 8px; border-radius:99px;
+    border:1px solid var(--line-2); background:var(--surface-2); color:var(--muted)}
+  .chip.tajriba{background:var(--accent-soft); border-color:var(--accent); color:var(--ink)}
+
+  .xabar{font-size:14px; color:var(--warn); min-height:20px; margin-top:10px}
+  .bosh{padding:22px; text-align:center; color:var(--muted); font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Admin</p>
+  <h1>Tajriba-sinov holati</h1>
+  <p class="muted" id="yangilandi">Yuklanmoqda&#8230;</p>
+
+  <h2>Guruhlar bo&#8216;yicha</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Guruh</th><th class="col-turi">Turi</th><th class="son">Talaba</th>
+          <th class="son">PRE</th><th class="son">MID</th><th class="son">POST</th>
+        </tr>
+      </thead>
+      <tbody id="jamlanma"><tr><td colspan="6" class="bosh">&#8230;</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Talabalar</h2>
+  <div class="asboblar">
+    <label for="f-guruh">Guruh</label>
+    <select id="f-guruh"><option value="">hammasi</option></select>
+    <label for="f-holat">Ko&#8216;rsatish</label>
+    <select id="f-holat">
+      <option value="">hammasi</option>
+      <option value="PRE">PRE topshirmaganlar</option>
+      <option value="MID">MID topshirmaganlar</option>
+      <option value="POST">POST topshirmaganlar</option>
+      <option value="tugatgan">uchalasini topshirganlar</option>
+    </select>
+    <button id="yangila">Yangilash</button>
+    <span class="small muted" id="soni"></span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Kod</th><th>Guruh</th>
+          <th class="belgi">PRE</th><th class="belgi">MID</th><th class="belgi">POST</th>
+        </tr>
+      </thead>
+      <tbody id="royxat"><tr><td colspan="5" class="bosh">&#8230;</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="xabar" id="xabar"></div>
+  <p class="small muted" style="margin-top:20px">Bu sahifada talabalarning ismi ko&#8216;rsatilmaydi, faqat kodlar. Ism va kod mosligi <em>kodlar.xlsx</em> faylida turadi.</p>
+
+</div>
+
+<script>
+/* Baza manzili va ochiq kaliti.
+   Bu ikkisi brauzerda ochiq turishi uchun mo'ljallangan: ular bilan
+   jadvallarni o'qib ham, o'zgartirib ham bo'lmaydi. Faqat ikkita amal
+   ochiq — kod tekshirish va javob saqlash. */
+
+const SB_URL = "https://zbuipyjpyliqqvnmccvu.supabase.co";
+const SB_KEY = "sb_publishable_MJMHFlJ0Oghx0sfRD7zMQg_v-530TK6";
+
+
+(function () {
+  "use strict";
+
+  var el = function (id) { return document.getElementById(id); };
+  var mat = function (s) { return document.createTextNode(s); };
+  var malumot = [];
+
+  function sbRpc(nom, tana) {
+    return fetch(SB_URL + "/rest/v1/rpc/" + nom, {
+      method: "POST",
+      headers: {
+        "apikey": SB_KEY,
+        "Authorization": "Bearer " + SB_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tana || {})
+    }).then(function (r) {
+      return r.text().then(function (t) {
+        var j = null;
+        try { j = JSON.parse(t); } catch (e) {}
+        if (!r.ok) return { xato: "server", body: j };
+        return { ok: true, body: j };
+      });
+    }).catch(function () { return { xato: "tarmoq" }; });
+  }
+
+  function sana(s) {
+    if (!s) return "";
+    var d = new Date(s);
+    var p = function (x) { return (x < 10 ? "0" : "") + x; };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) +
+           " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+
+  function katak(tr, matni, cls, sarlavha) {
+    var td = document.createElement("td");
+    if (cls) td.className = cls;
+    if (sarlavha) td.title = sarlavha;
+    td.appendChild(mat(matni));
+    tr.appendChild(td);
+    return td;
+  }
+
+  function belgiKatak(tr, bor, vaqt) {
+    var td = document.createElement("td");
+    td.className = "belgi";
+    var sp = document.createElement("span");
+    sp.className = bor ? "bor" : "yoq";
+    sp.appendChild(mat(bor ? "✓" : "—"));
+    if (bor && vaqt) td.title = sana(vaqt);
+    td.appendChild(sp);
+    tr.appendChild(td);
+  }
+
+  function jamlanmaChiz() {
+    var g = {};
+    malumot.forEach(function (r) {
+      if (!g[r.guruh]) g[r.guruh] = { turi: r.turi, jami: 0, pre: 0, mid: 0, post: 0 };
+      var x = g[r.guruh];
+      x.jami++;
+      if (r.pre) x.pre++;
+      if (r.mid) x.mid++;
+      if (r.post) x.post++;
+    });
+    var tb = el("jamlanma");
+    while (tb.firstChild) tb.removeChild(tb.firstChild);
+    var jami = { jami: 0, pre: 0, mid: 0, post: 0 };
+    Object.keys(g).sort().forEach(function (nom) {
+      var x = g[nom];
+      jami.jami += x.jami; jami.pre += x.pre; jami.mid += x.mid; jami.post += x.post;
+      var tr = document.createElement("tr");
+      katak(tr, nom, "kod");
+      var td = document.createElement("td");
+      td.className = "col-turi";
+      var sp = document.createElement("span");
+      sp.className = "chip " + (x.turi === "tajriba" ? "tajriba" : "");
+      sp.appendChild(mat(x.turi));
+      td.appendChild(sp); tr.appendChild(td);
+      katak(tr, String(x.jami), "son");
+      katak(tr, x.pre + " / " + x.jami, "son");
+      katak(tr, x.mid + " / " + x.jami, "son");
+      katak(tr, x.post + " / " + x.jami, "son");
+      tb.appendChild(tr);
+    });
+    var tr = document.createElement("tr");
+    tr.className = "jami";
+    katak(tr, "Jami", "kod");
+    katak(tr, "", "col-turi");
+    katak(tr, String(jami.jami), "son");
+    katak(tr, jami.pre + " / " + jami.jami, "son");
+    katak(tr, jami.mid + " / " + jami.jami, "son");
+    katak(tr, jami.post + " / " + jami.jami, "son");
+    tb.appendChild(tr);
+  }
+
+  function guruhlarniQoy() {
+    var s = el("f-guruh");
+    var bor = {};
+    malumot.forEach(function (r) { bor[r.guruh] = true; });
+    while (s.options.length > 1) s.remove(1);
+    Object.keys(bor).sort().forEach(function (nom) {
+      var o = document.createElement("option");
+      o.value = nom; o.textContent = nom;
+      s.appendChild(o);
+    });
+  }
+
+  function royxatChiz() {
+    var fg = el("f-guruh").value;
+    var fh = el("f-holat").value;
+    var satrlar = malumot.filter(function (r) {
+      if (fg && r.guruh !== fg) return false;
+      if (fh === "PRE")  return !r.pre;
+      if (fh === "MID")  return !r.mid;
+      if (fh === "POST") return !r.post;
+      if (fh === "tugatgan") return r.pre && r.mid && r.post;
+      return true;
+    });
+
+    var tb = el("royxat");
+    while (tb.firstChild) tb.removeChild(tb.firstChild);
+    if (!satrlar.length) {
+      var tr0 = document.createElement("tr");
+      var td0 = document.createElement("td");
+      td0.colSpan = 5; td0.className = "bosh";
+      td0.appendChild(mat("Bu shartga mos talaba yo‘q."));
+      tr0.appendChild(td0); tb.appendChild(tr0);
+    } else {
+      satrlar.forEach(function (r) {
+        var tr = document.createElement("tr");
+        katak(tr, r.kod, "kod");
+        katak(tr, r.guruh, "");
+        belgiKatak(tr, r.pre, r.pre_sana);
+        belgiKatak(tr, r.mid, r.mid_sana);
+        belgiKatak(tr, r.post, r.post_sana);
+        tb.appendChild(tr);
+      });
+    }
+    el("soni").textContent = satrlar.length + " ta ko‘rsatildi";
+  }
+
+  function yukla() {
+    el("yangila").disabled = true;
+    el("xabar").textContent = "";
+    el("yangilandi").textContent = "Yuklanmoqda…";
+    sbRpc("admin_holat").then(function (j) {
+      el("yangila").disabled = false;
+      if (j.xato) {
+        el("yangilandi").textContent = "";
+        el("xabar").textContent = j.xato === "tarmoq"
+          ? "Internetga ulanib bo‘lmadi. Aloqani tekshirib, Yangilash tugmasini bosing."
+          : "Server javob bermadi. Birozdan keyin Yangilash tugmasini bosing.";
+        return;
+      }
+      malumot = j.body || [];
+      el("yangilandi").textContent =
+        malumot.length + " ta talaba · oxirgi yangilanish " + sana(new Date().toISOString());
+      guruhlarniQoy();
+      jamlanmaChiz();
+      royxatChiz();
+    });
+  }
+
+  el("yangila").addEventListener("click", yukla);
+  el("f-guruh").addEventListener("change", royxatChiz);
+  el("f-holat").addEventListener("change", royxatChiz);
+  yukla();
+})();
+</script>
+</body>
+</html>
