@@ -135,6 +135,16 @@
     </table>
   </div>
 
+  <h2>Eksport</h2>
+  <p class="small muted">Ikkala fayl ham CSV ko&#8216;rinishida yuklanadi, JASP va Excel to&#8216;g&#8216;ridan-to&#8216;g&#8216;ri ochadi.</p>
+  <p class="small muted"><strong>Tahlil uchun</strong> &#8212; har bir talaba bitta qator, PRE, MID va POST ballari alohida ustunlarda. MANOVA va Koen d uchun shu fayl ishlatiladi. Topshirilmagan o&#8216;lchov katagi bo&#8216;sh qoladi.<br>
+  <strong>Xom javoblar</strong> &#8212; har bir topshiriq bitta qator, 45 ta javob alohida ustunda. Bu fayl tahlil uchun emas, ma&#8217;lumotni saqlab qo&#8216;yish uchun.</p>
+  <div class="asboblar">
+    <button class="asosiy" id="eks-tahlil">Tahlil uchun (JASP)</button>
+    <button id="eks-xom">Xom javoblar</button>
+    <span class="small muted" id="eks-xabar"></span>
+  </div>
+
   <div class="xabar" id="xabar"></div>
   <p class="small muted" style="margin-top:20px">Bu sahifada talabalarning ismi ko&#8216;rsatilmaydi, faqat kodlar. Ism va kod mosligi <em>kodlar.xlsx</em> faylida turadi.</p>
 
@@ -292,6 +302,7 @@ const SB_KEY = "sb_publishable_MJMHFlJ0Oghx0sfRD7zMQg_v-530TK6";
   }
 
   function yukla() {
+    natijalar = null;
     el("yangila").disabled = true;
     el("xabar").textContent = "";
     el("yangilandi").textContent = "Yuklanmoqda…";
@@ -312,6 +323,111 @@ const SB_KEY = "sb_publishable_MJMHFlJ0Oghx0sfRD7zMQg_v-530TK6";
       royxatChiz();
     });
   }
+
+  var natijalar = null;
+
+  function csvKatak(v) {
+    if (v === null || v === undefined) return "";
+    var t = String(v);
+    return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+  }
+  function csvQator(a) { return a.map(csvKatak).join(","); }
+
+  function bugun() {
+    var d = new Date(), p = function (x) { return (x < 10 ? "0" : "") + x; };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
+
+  function yuklab(nom, matn) {
+    var blob = new Blob(["\ufeff" + matn], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = nom;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); if (a.parentNode) a.parentNode.removeChild(a); }, 200);
+  }
+
+  var NUQTALAR = ["PRE", "MID", "POST"];
+  var MEZON = ["bilim", "amaliy", "refleksiv", "kasbiy"];
+
+  function tahlilCsv() {
+    var bosh = ["kod", "guruh", "turi", "topshirgan"];
+    NUQTALAR.forEach(function (p) {
+      MEZON.forEach(function (m) {
+        bosh.push(p.toLowerCase() + "_" + m + "_ball", p.toLowerCase() + "_" + m + "_foiz");
+      });
+    });
+    var xarita = {};
+    natijalar.forEach(function (r) { xarita[r.kod + "|" + r.nuqta] = r; });
+
+    var satrlar = [csvQator(bosh)];
+    malumot.forEach(function (t) {
+      var qator = [t.kod, t.guruh, t.turi];
+      var soni = 0;
+      NUQTALAR.forEach(function (p) { if (xarita[t.kod + "|" + p]) soni++; });
+      qator.push(soni);
+      NUQTALAR.forEach(function (p) {
+        var r = xarita[t.kod + "|" + p];
+        MEZON.forEach(function (m) {
+          qator.push(r ? r[m + "_ball"] : "");
+          qator.push(r ? r[m + "_foiz"] : "");
+        });
+      });
+      satrlar.push(csvQator(qator));
+    });
+    return satrlar.join("\n");
+  }
+
+  function xomCsv() {
+    var bosh = ["kod", "guruh", "turi", "nuqta", "sana"];
+    for (var i = 1; i <= 45; i++) bosh.push("j" + i);
+    var satrlar = [csvQator(bosh)];
+    natijalar.forEach(function (r) {
+      var qator = [r.kod, r.guruh, r.turi, r.nuqta, sana(r.yakunlangan)];
+      for (var i = 1; i <= 45; i++) {
+        var v = r.javoblar ? r.javoblar[String(i)] : "";
+        qator.push(v === undefined || v === null ? "" : v);
+      }
+      satrlar.push(csvQator(qator));
+    });
+    return satrlar.join("\n");
+  }
+
+  function natijalarniOl() {
+    if (natijalar) return Promise.resolve(true);
+    return sbRpc("admin_natijalar").then(function (j) {
+      if (j.xato) return false;
+      natijalar = j.body || [];
+      return true;
+    });
+  }
+
+  function eksport(tur) {
+    el("eks-xabar").textContent = "Tayyorlanmoqda\u2026";
+    el("eks-tahlil").disabled = true; el("eks-xom").disabled = true;
+    natijalarniOl().then(function (ok) {
+      el("eks-tahlil").disabled = false; el("eks-xom").disabled = false;
+      if (!ok) {
+        el("eks-xabar").textContent = "Ma\u2019lumotni olib bo\u2018lmadi. Qayta urinib ko\u2018ring.";
+        return;
+      }
+      if (tur === "tahlil") {
+        yuklab("tahlil-" + bugun() + ".csv", tahlilCsv());
+        el("eks-xabar").textContent = malumot.length + " ta talaba, " + natijalar.length + " ta topshiriq.";
+      } else {
+        if (!natijalar.length) {
+          el("eks-xabar").textContent = "Hozircha topshirilgan javob yo\u2018q.";
+          return;
+        }
+        yuklab("xom-javoblar-" + bugun() + ".csv", xomCsv());
+        el("eks-xabar").textContent = natijalar.length + " ta topshiriq yuklandi.";
+      }
+    });
+  }
+
+  el("eks-tahlil").addEventListener("click", function () { eksport("tahlil"); });
+  el("eks-xom").addEventListener("click", function () { eksport("xom"); });
 
   el("yangila").addEventListener("click", yukla);
   el("f-guruh").addEventListener("change", royxatChiz);
