@@ -793,6 +793,16 @@ const MEZONLAR = [
     ekran("kirish");
   });
 
+  /* QR orqali kelinganda manzildagi kod maydonga qo'yiladi */
+  (function () {
+    try {
+      var m = (window.location.search || "").match(/[?&]kod=([^&]+)/);
+      if (!m) return;
+      var k = decodeURIComponent(m[1]).trim().toUpperCase();
+      if (/^[A-Z0-9-]{1,20}$/.test(k)) el("kod").value = k;
+    } catch (e) { /* manzil o'qilmasa, maydon bo'sh qoladi */ }
+  })();
+
   qoralamaniKorsat();
 })();
 </script>
