@@ -207,7 +207,7 @@
     <h1 id="natija-sarlavha">Natija</h1>
     <p class="muted" id="natija-izoh"></p>
 
-    <div class="ok-note">Javoblaringiz saqlandi. So&#8216;rovnoma yakunlandi, sahifani yopishingiz mumkin.</div>
+    <div class="ok-note" id="saqlash-xabari">Javoblaringiz saqlandi. So&#8216;rovnoma yakunlandi, sahifani yopishingiz mumkin.</div>
 
     <div class="tbl-wrap">
       <table>
@@ -219,6 +219,10 @@
     </div>
 
     <p class="small muted" style="margin-top:14px">Umumiy ball hisoblanmaydi: mezonlarning hajmi turlicha va yig&#8216;indi natijani buzadi. Darajalar: past 0&#8211;33, o&#8216;rta 34&#8211;66, yuqori 67&#8211;100 foiz.</p>
+
+    <div class="amal">
+      <button id="qayta">Boshidan boshlash</button>
+    </div>
 
     <details style="margin-top:24px">
       <summary class="small muted" style="cursor:pointer">Ma&#8217;lumot qatori (zaxira nusxa)</summary>
@@ -700,13 +704,13 @@ const MEZONLAR = [
         el("qism-xabar").textContent = "Kod ro‘yxatdan topilmadi. Tekshiruvchiga murojaat qiling.";
         return;
       }
-      if (r.holat !== "saqlandi") {
+      if (r.holat !== "saqlandi" && r.holat !== "namuna") {
         el("keyingi").textContent = "Qayta yuborish";
         el("qism-xabar").textContent = "Javoblar to‘liq emas yoki noto‘g‘ri. Qayta urinib ko‘ring.";
         return;
       }
       qoralamaOchir();
-      natijaChiz(r);
+      natijaChiz(r, r.holat === "namuna");
     });
   }
 
@@ -722,9 +726,12 @@ const MEZONLAR = [
     return "yuqori";
   }
 
-  function natijaChiz(r) {
-    el("natija-sarlavha").textContent = kod;
+  function natijaChiz(r, namuna) {
+    el("natija-sarlavha").textContent = namuna ? "Namuna natijasi" : kod;
     el("natija-izoh").textContent = nuqta + "-test · " + (guruh ? guruh + " · " : "") + sana(new Date());
+    el("saqlash-xabari").textContent = namuna
+      ? "Bu namuna to‘ldirish. Ball haqiqiy tartibda hisoblandi, lekin javoblar hech qayerda saqlanmadi va tajriba ma’lumotiga qo‘shilmadi."
+      : "Javoblaringiz saqlandi. So‘rovnoma yakunlandi, sahifani yopishingiz mumkin.";
 
     var tb = el("natija-tbody");
     while (tb.firstChild) tb.removeChild(tb.firstChild);
@@ -773,6 +780,17 @@ const MEZONLAR = [
       return;
     }
     el("natija-xabar").textContent = ok ? "Nusxalandi." : "Nusxalanmadi — matnni belgilab, qo‘lda nusxalang.";
+  });
+
+  el("qayta").addEventListener("click", function () {
+    javoblar = {}; qismIdx = 0; kod = ""; nuqta = ""; guruh = "";
+    boshlanganVaqt = null;
+    el("kod").value = ""; el("nuqta").value = "";
+    el("kirish-xabar").textContent = "";
+    el("track-i").style.width = "0%";
+    qoralamaOchir();
+    qoralamaniKorsat();
+    ekran("kirish");
   });
 
   qoralamaniKorsat();
