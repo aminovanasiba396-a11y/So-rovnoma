@@ -3,805 +3,520 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Emotsional intellekt so&#8216;rovnomasi</title>
+<title>Emotsional intellekt platformasi</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-  :root{
-    --bg:#FBFAF7; --surface:#FFFFFF; --surface-2:#F4F2EC;
-    --ink:#1E2422; --muted:#67736E; --line:#E3DFD6; --line-2:#CFC9BC;
-    --accent:#2F6F5E; --accent-ink:#FFFFFF; --accent-soft:#E7EFEB;
-    --warn:#8A5A2B; --warn-soft:#F6EEE2;
-    --serif:"Spectral",Georgia,"Times New Roman",serif;
-    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
-    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-    color-scheme:light;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
-      --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
-      --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
-      --warn:#D7A76A; --warn-soft:#2A2319;
-      color-scheme:dark;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
-    --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
-    --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
-    --warn:#D7A76A; --warn-soft:#2A2319;
-    color-scheme:dark;
-  }
-
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:var(--sans); font-size:16px; line-height:1.55;
-  }
-  img{max-width:100%}
-  [hidden]{display:none!important}
-  .wrap{max-width:680px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
-
-  .bar{
-    position:sticky; top:env(safe-area-inset-top,0px); z-index:5;
-    background:var(--bg); border-bottom:1px solid var(--line);
-  }
-  .bar-in{max-width:680px; margin:0 auto; padding:10px 16px 8px;
-    display:flex; align-items:baseline; gap:12px; flex-wrap:nowrap}
-  .bar-nom{font-family:var(--serif); font-weight:600; font-size:17px;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .bar-son{font-family:var(--mono); font-size:13px; color:var(--muted);
-    margin-inline-start:auto; white-space:nowrap}
-  .track{height:3px; background:var(--line)}
-  .track > i{display:block; height:100%; background:var(--accent); width:0; transition:width .25s ease}
-  @media (prefers-reduced-motion:reduce){ .track > i{transition:none} }
-
-  h1{font-family:var(--serif); font-weight:600; font-size:clamp(25px,6vw,33px);
-     line-height:1.2; text-wrap:balance; margin:32px 0 6px}
-  h2{font-family:var(--serif); font-weight:600; font-size:21px; margin:0 0 4px; text-wrap:balance}
-  .kicker{font-size:12px; letter-spacing:.09em; text-transform:uppercase;
-    color:var(--muted); font-weight:600; margin:0}
-  p{margin:0 0 12px; max-width:62ch}
-  .muted{color:var(--muted)}
-  .small{font-size:14px}
-
-  .panel{background:var(--surface); border:1px solid var(--line); border-radius:10px;
-    padding:18px 16px; margin:18px 0}
-  .note{background:var(--warn-soft); border-inline-start:3px solid var(--warn);
-    padding:12px 14px; border-radius:0 6px 6px 0; margin:18px 0; font-size:14px}
-  .note strong{color:var(--warn)}
-  .ok-note{background:var(--accent-soft); border-inline-start:3px solid var(--accent);
-    padding:12px 14px; border-radius:0 6px 6px 0; margin:18px 0; font-size:14px}
-
-  label.fld{display:block; margin:0 0 14px}
-  label.fld > span{display:block; font-size:13px; font-weight:600; margin-bottom:5px}
-  input[type=text], select{
-    width:100%; font:inherit; font-family:var(--mono); padding:11px 12px;
-    background:var(--bg); color:var(--ink);
-    border:1px solid var(--line-2); border-radius:7px;
-  }
-  select{font-family:var(--sans)}
-  input[type=text]:focus-visible, select:focus-visible, button:focus-visible{
-    outline:2px solid var(--accent); outline-offset:2px}
-
-  button{font:inherit; cursor:pointer; border-radius:7px; border:1px solid var(--line-2);
-    background:var(--surface); color:var(--ink); padding:11px 18px}
-  button.asosiy{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
-  button[disabled]{opacity:.5; cursor:not-allowed}
-  .amal{display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; align-items:center}
-
-  .savol{border-top:1px solid var(--line); padding:18px 0 4px}
-  .savol:first-of-type{border-top:0}
-  .savol.javobsiz{background:var(--warn-soft); border-radius:8px;
-    padding-inline:12px; margin-inline:-12px; border-top-color:transparent}
-  .q{display:flex; gap:10px; margin-bottom:12px}
-  .q-n{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:3px; min-width:24px}
-  .q-t{flex:1; max-width:56ch}
-  .vaziyat{font-style:italic; color:var(--ink); background:var(--surface-2);
-    border-radius:8px; padding:12px 14px; margin-bottom:10px}
-
-  .likert{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
-  @media (max-width:520px){ .likert{grid-template-columns:repeat(2,1fr)} }
-  .likert button{display:flex; align-items:center; justify-content:center;
-    min-height:52px; padding:10px 8px; text-align:center; line-height:1.3}
-  .likert .b-mat{font-size:14px; color:var(--ink)}
-  .qator{display:grid; gap:8px}
-  .qator button{text-align:start; padding:11px 13px; display:flex; gap:10px; align-items:flex-start}
-  .qator .b-harf{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
-  button.tanlangan{background:var(--accent-soft); border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent)}
-  button.tanlangan .b-mat, button.tanlangan .b-harf{color:var(--ink)}
-
-  table{border-collapse:collapse; width:100%; font-size:15px}
-  th,td{text-align:start; padding:10px 8px; border-bottom:1px solid var(--line)}
-  th{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600}
-  td.son{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:end; white-space:nowrap}
-  .tbl-wrap{overflow-x:auto}
-  @media (max-width:520px){
-    .col-manba{display:none}
-    th,td{padding:10px 5px}
-  }
-  .dj{display:inline-block; font-size:12.5px; font-weight:600; padding:2px 9px; border-radius:99px;
-    border:1px solid var(--line-2); background:var(--surface-2)}
-  .dj.yuqori{background:var(--accent-soft); border-color:var(--accent); color:var(--ink)}
-  textarea{width:100%; min-height:110px; font-family:var(--mono); font-size:12px;
-    padding:11px; border:1px solid var(--line-2); border-radius:7px;
-    background:var(--bg); color:var(--ink); white-space:pre; overflow-x:auto}
-  .xabar{font-size:14px; color:var(--warn); margin-top:12px; min-height:20px}
-</style>
+<link rel="stylesheet" href="uslub.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2F6F5E">
+<link rel="apple-touch-icon" href="ikon-192.png">
+<link rel="icon" href="ikon-192.png">
 </head>
 <body>
 
-<div class="bar" id="bar" hidden>
-  <div class="bar-in">
-    <span class="bar-nom" id="bar-nom">A qismi</span>
-    <span class="bar-son" id="bar-son">1 / 5</span>
+<div class="yuqori-bar" id="bar" hidden>
+  <div class="ichki">
+    <span class="nom" id="bar-nom">Bosh sahifa</span>
+    <span class="kod" id="bar-kod"></span>
+    <button id="bar-orqaga" type="button">Orqaga</button>
   </div>
-  <div class="track"><i id="track-i"></i></div>
 </div>
 
 <div class="wrap">
 
-  <!-- KIRISH -->
+  <!-- ============ KIRISH ============ -->
   <section id="e-kirish">
-    <p class="kicker">Diagnostik so&#8216;rovnoma</p>
-    <h1>Bo&#8216;lajak boshlang&#8216;ich sinf o&#8216;qituvchisida emotsional intellekt</h1>
-    <p class="muted">45 savol, besh qism. To&#8216;ldirish taxminan 25 daqiqa vaqt oladi.</p>
-
-    <div class="ok-note" id="qoralama-panel" hidden>
-      <strong id="qoralama-matn">Tugallanmagan to&#8216;ldirish topildi.</strong>
-      <div class="amal" style="margin-top:10px">
-        <button class="asosiy" id="davom">Davom etish</button>
-        <button id="boshqatdan">Boshqatdan boshlash</button>
-      </div>
-    </div>
+    <p class="kicker">Bo‘lajak boshlang‘ich sinf o‘qituvchilari uchun</p>
+    <h1>Emotsional intellekt platformasi</h1>
+    <p class="muted">So‘rovnoma, mashg‘ulot materiallari va refleksiv kundalik bir joyda.</p>
 
     <div class="panel">
-      <label class="fld">
-        <span>Talaba kodi</span>
-        <input type="text" id="kod" placeholder="T-4K7M" autocomplete="off" spellcheck="false">
-      </label>
       <label class="fld" style="margin-bottom:0">
-        <span>O&#8216;lchov nuqtasi</span>
-        <select id="nuqta">
-          <option value="">&#8212; tanlang &#8212;</option>
-          <option value="PRE">PRE-test</option>
-          <option value="MID">MID-test</option>
-          <option value="POST">POST-test</option>
-        </select>
+        <span>Talaba kodi</span>
+        <input type="text" class="mono" id="kod" placeholder="Masalan, T-4K7M" autocomplete="off" spellcheck="false">
       </label>
-    </div>
-
-    <h2>To&#8216;ldirish tartibi</h2>
-    <p>Har bir savolga o&#8216;zingizga eng mos keladigan bitta javobni tanlang. To&#8216;g&#8216;ri yoki noto&#8216;g&#8216;ri javob yo&#8216;q, savollar sizning kundalik ish tajribangizga tegishli. Uzoq o&#8216;ylamang, birinchi javobingiz odatda aniqroq bo&#8216;ladi.</p>
-    <p>Ismingiz so&#8216;ralmaydi. Natijalar faqat ilmiy maqsadda, guruh darajasida tahlil qilinadi va sizning baholaringizga qo&#8216;shilmaydi. Ishtirok ixtiyoriy.</p>
-
-    <div class="note">
-      <strong>Eslatma.</strong> Har bir kod har bir o&#8216;lchov nuqtasida bir marta topshiradi. Javoblar yuborilgandan keyin o&#8216;zgartirib bo&#8216;lmaydi. To&#8216;ldirish davomida javoblaringiz shu qurilmada saqlanib turadi, shuning uchun sahifa yopilib qolsa ham qaytib davom ettirishingiz mumkin.
-    </div>
-
-    <div class="amal">
-      <button class="asosiy" id="boshla">Boshlash</button>
-      <span class="xabar" id="kirish-xabar"></span>
-    </div>
-  </section>
-
-  <!-- QISMLAR -->
-  <section id="e-qism" hidden>
-    <h1 id="qism-sarlavha">A qismi</h1>
-    <p class="muted" id="qism-izoh"></p>
-    <div id="bandlar"></div>
-    <div class="amal">
-      <button id="orqaga">Orqaga</button>
-      <button class="asosiy" id="keyingi">Keyingisi</button>
-      <span class="xabar" id="qism-xabar"></span>
-    </div>
-  </section>
-
-  <!-- NATIJA -->
-  <section id="e-natija" hidden>
-    <p class="kicker">Natija</p>
-    <h1 id="natija-sarlavha">Natija</h1>
-    <p class="muted" id="natija-izoh"></p>
-
-    <div class="ok-note" id="saqlash-xabari">Javoblaringiz saqlandi. So&#8216;rovnoma yakunlandi, sahifani yopishingiz mumkin.</div>
-
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr><th>Mezon</th><th class="col-manba">Manba</th><th style="text-align:end">Ball</th><th style="text-align:end">Foiz</th><th>Daraja</th></tr>
-        </thead>
-        <tbody id="natija-tbody"></tbody>
-      </table>
-    </div>
-
-    <p class="small muted" style="margin-top:14px">Umumiy ball hisoblanmaydi: mezonlarning hajmi turlicha va yig&#8216;indi natijani buzadi. Darajalar: past 0&#8211;33, o&#8216;rta 34&#8211;66, yuqori 67&#8211;100 foiz.</p>
-
-    <div class="amal">
-      <button id="qayta">Boshidan boshlash</button>
-    </div>
-
-    <details style="margin-top:24px">
-      <summary class="small muted" style="cursor:pointer">Ma&#8217;lumot qatori (zaxira nusxa)</summary>
-      <p class="small muted" style="margin-top:10px">Javoblar bazada saqlangan. Bu qator faqat zaxira uchun.</p>
-      <textarea id="qator-matn" readonly spellcheck="false"></textarea>
-      <div class="amal">
-        <button id="nusxa">Nusxalash</button>
-        <span class="xabar" id="natija-xabar"></span>
+      <div class="amal" style="margin-top:14px">
+        <button class="asosiy" id="kirish-tugma" type="button">Kirish</button>
+        <span class="xabar" id="kirish-xabar"></span>
       </div>
-    </details>
+    </div>
+    <p class="small muted">Ismingiz so‘ralmaydi. Kodingizni o‘qituvchingiz bergan. Javoblaringiz faqat ilmiy maqsadda, guruh darajasida tahlil qilinadi va baholaringizga qo‘shilmaydi.</p>
+  </section>
+
+  <!-- ============ BOSH SAHIFA ============ -->
+  <section id="e-bosh" hidden>
+    <p class="kicker" id="bosh-guruh"></p>
+    <h1>Xush kelibsiz</h1>
+
+    <div class="panel" id="sorov-panel">
+      <h3 style="margin-top:0">Diagnostik so‘rovnoma</h3>
+      <p class="small muted" id="sorov-izoh"></p>
+      <div class="amal" style="margin-top:10px">
+        <button class="asosiy" id="sorov-tugma" type="button">So‘rovnomani ochish</button>
+      </div>
+    </div>
+
+    <div id="mashgulot-bolim" hidden>
+      <h2>Mashg‘ulotlar</h2>
+      <p class="small muted">Har bir mashg‘ulotdan oldin materialni o‘qing va tekshiruv savollariga javob bering. Mashg‘ulot oxirida refleksiv kundalikni yozing.</p>
+      <div id="mashgulot-royxat"></div>
+    </div>
+  </section>
+
+  <!-- ============ MASHG'ULOT ============ -->
+  <section id="e-mashgulot" hidden>
+    <p class="kicker" id="m-modul"></p>
+    <h1 id="m-nom"></h1>
+    <p class="muted small" id="m-fan"></p>
+
+    <div class="panel">
+      <p style="margin-bottom:6px"><strong>Maqsad.</strong> <span id="m-maqsad"></span></p>
+      <p class="small" style="margin:10px 0 4px"><strong>Mashg‘ulotdan keyin siz:</strong></p>
+      <ul class="toza small" id="m-natijalar"></ul>
+      <p class="small muted" style="margin:0"><strong>Tarkibiy qism:</strong> <span id="m-tarkibiy"></span> · <strong>Mahsulot:</strong> <span id="m-mahsulot"></span></p>
+    </div>
+
+    <h2>Mashg‘ulotdan oldin o‘qing</h2>
+    <div class="oqish" id="m-oqish"></div>
+
+    <h2>Tekshiruv savollari</h2>
+    <p class="small muted">Har bir savolning bitta to‘g‘ri javobi bor. Natija baholanmaydi, u o‘zingizni tekshirish uchun.</p>
+    <div id="m-savollar"></div>
+    <div class="amal">
+      <button class="asosiy" id="m-tekshir" type="button">Tekshirish</button>
+      <button id="m-qayta" type="button" hidden>Qayta urinish</button>
+      <span class="xabar" id="m-xabar"></span>
+    </div>
+
+    <h2>Amaliyot topshirig‘i</h2>
+    <div class="panel"><p id="m-topshiriq" style="margin:0"></p></div>
+
+    <div class="amal">
+      <button class="asosiy" id="m-kundalik" type="button">Refleksiv kundalikni yozish</button>
+    </div>
+  </section>
+
+  <!-- ============ KUNDALIK ============ -->
+  <section id="e-kundalik" hidden>
+    <p class="kicker">Refleksiv kundalik</p>
+    <h1 id="k-nom"></h1>
+    <p class="muted small">Har bir bosqichga kamida bir-ikki to‘liq jumla yozing. Kundalik baholanmaydi, lekin u sizning kasbiy o‘sishingizni ko‘rsatadigan asosiy hujjat. Yozganingiz shu qurilmada saqlanib turadi, saqlangandan keyin ham uni tahrirlash mumkin.</p>
+
+    <div class="panel" id="k-qiyos-panel" hidden>
+      <h3 style="margin-top:0">Vaziyat</h3>
+      <p id="k-qiyos-vaziyat"></p>
+      <textarea id="k-qiyos" aria-label="Vaziyatga javobingiz"></textarea>
+      <div class="hisob" id="k-qiyos-hisob"></div>
+    </div>
+
+    <div id="k-bosqichlar"></div>
+
+    <div class="bosqich" id="k-topshiriq-blok">
+      <div class="b-nom">Oldingi mashg‘ulotning amaliyot topshirig‘i</div>
+      <div class="b-savol">Uni bajardingizmi?</div>
+      <div class="radio-qator" id="k-topshiriq"></div>
+    </div>
+
+    <div class="amal">
+      <button class="asosiy" id="k-saqla" type="button">Saqlash</button>
+      <span class="xabar" id="k-xabar"></span>
+    </div>
+
+    <div id="k-qiyos-natija" hidden>
+      <h2>Birinchi va oxirgi javobingiz</h2>
+      <div class="qiyos">
+        <div><p class="small muted" style="margin-bottom:4px">1-mashg‘ulotda</p><div class="ustun" id="k-q1"></div></div>
+        <div><p class="small muted" style="margin-bottom:4px">12-mashg‘ulotda</p><div class="ustun" id="k-q12"></div></div>
+      </div>
+      <p class="small muted" style="margin-top:10px">Ikkala javobni solishtiring: endi bolaning holatini qanday aniqlaysiz va javobingiz nimasi bilan farq qiladi? Buni portfoliodagi o‘sish dalillaringizdan biri sifatida yozing.</p>
+    </div>
   </section>
 
 </div>
 
+<script src="umumiy.js"></script>
+<script src="mashgulotlar.js"></script>
 <script>
-/* Baza manzili va ochiq kaliti.
-   Bu ikkisi brauzerda ochiq turishi uchun mo'ljallangan: ular bilan
-   jadvallarni o'qib ham, o'zgartirib ham bo'lmaydi. Faqat ikkita amal
-   ochiq — kod tekshirish va javob saqlash. */
-
-const SB_URL = "https://zbuipyjpyliqqvnmccvu.supabase.co";
-const SB_KEY = "sb_publishable_MJMHFlJ0Oghx0sfRD7zMQg_v-530TK6";
-
-
-/* Diagnostik so'rovnoma — faqat bandlar matni.
-   Ballash kaliti bu yerda YO'Q: u bazada turadi (band_kaliti jadvali).
-   C qismining variantlari talabaga ko'rinadigan tartibda yozilgan;
-   qaysi variant necha ball ekanini faqat baza biladi. */
-
-const SHKALA = [
-  "Mutlaqo qo‘shilmayman",
-  "Qo‘shilmayman",
-  "Qo‘shilaman",
-  "To‘liq qo‘shilaman"
-];
-
-const QISM_A = [
-  { n: 1,  text: "O‘quvchi xafa bo‘lganini, buni bildirmaslikka urinsa ham, sezaman" },
-  { n: 2,  text: "O‘quvchi birdan jimib qolsa, buning sababini ko‘pincha tushunmayman" },
-  { n: 3,  text: "Bolalar janjallashganda har birining nimadan xafa bo‘lganini ajrata olaman" },
-  { n: 4,  text: "Ota-onaning gapirish ohangidan uning tashvishlanayotganini bilib olaman" },
-  { n: 5,  text: "O‘quvchi javob berishdan qo‘rqayotganini yoki javobni bilmasligini farqlay olaman" },
-  { n: 6,  text: "Yig‘lab yuborgan o‘quvchini tez tinchlantira olaman" },
-  { n: 7,  text: "O‘quvchining ishtiyoqi so‘nib qolsa, uni qaytadan qiziqtira olmayman" },
-  { n: 8,  text: "Sinfdagi keskinlikni janjal kuchaymasdan bosa olaman" },
-  { n: 9,  text: "O‘quvchining qo‘rquvini yengishiga yordam berish menga qiyin" },
-  { n: 10, text: "Bolaning xatosi haqida gapirganda uni ruhan tushirib yubormaslikni uddalayman" },
-  { n: 11, text: "Ayrim o‘quvchilar bilan munosabatim nega qiyin kechayotganini o‘zim tushunmayman" },
-  { n: 12, text: "Ish kunim og‘ir o‘tganida buning aniq sababini ayta olaman" },
-  { n: 13, text: "Bolalarga nisbatan nima his qilayotganimni so‘z bilan ifodalash menga qiyin" },
-  { n: 14, text: "Charchoq bilan asabiylikni bir-biridan ajrata olaman" },
-  { n: 15, text: "Dars oldidan hayajonlansam, o‘zimni tez qo‘lga ola bilaman" },
-  { n: 16, text: "Kun davomida to‘plangan asabiylikni bosishim qiyin kechadi" },
-  { n: 17, text: "Ishdagi muvaffaqiyatsizlikdan keyin o‘zimni tez o‘nglab ola bilaman" },
-  { n: 18, text: "Charchaganimni yoki zerikkanimni bolalarga bildirmaslikni uddalayman" },
-  { n: 19, text: "O‘quvchining javobidan ko‘nglim to‘lmasa ham, buni yuzimda bildirmayman" },
-  { n: 20, text: "Jahlim chiqqanda ko‘nglimdagini aytib qo‘yaman" }
-];
-
-const QISM_B = [
-  { n: 21, q: "Meta-moment texnikasi qanday tartibda qo‘llaniladi?",
-    opts: {
-      A: "Nafas ol, To‘xta, Maqsadli javob ber, Holatingni his qil",
-      B: "To‘xta, Nafas ol, Holatingni his qil, Maqsadli javob ber",
-      C: "Holatingni his qil, To‘xta, Nafas ol, Maqsadli javob ber",
-      D: "To‘xta, Holatingni his qil, Maqsadli javob ber, Nafas ol"
-    } },
-  { n: 22, q: "Refleksiv jurnaldagi “Keyingi darsda nimani o‘zgartiraman?” savoli qaysi bosqichga tegishli?",
-    opts: { A: "vaziyatni tavsiflash", B: "baholash", C: "tahlil", D: "harakat rejasi" } },
-  { n: 23, q: "Vaziyat yechimi algoritmida hissiyotni aniqlashdan keyin qaysi bosqich keladi?",
-    opts: { A: "variant taklif qilish", B: "boshqalar nuqtai nazarini tushunish", C: "refleksiya", D: "vaziyatni tavsiflash" } },
-  { n: 24, q: "Quyidagilardan qaysi biri noverbal signal emas?",
-    opts: { A: "yelkalarning qisilishi", B: "ko‘z aloqasidan qochish", C: "og‘zaki shikoyat bildirish", D: "partadagi qo‘llarning bezovta harakati" } },
-  { n: 25, q: "Kasbiy barqarorlik yo‘li qanday talabga javob berishi kerak?",
-    opts: { A: "nazariy asoslangan va yangi bo‘lishi", B: "amaliy va o‘lchanadigan bo‘lishi", C: "hamkasblar tasdiqlagan bo‘lishi", D: "uzoq muddatga mo‘ljallangan bo‘lishi" } },
-  { n: 26, q: "Psixologik xavfsiz sinf muhiti qaysi uch yo‘nalishda baholanadi?",
-    opts: { A: "jismoniy, hissiy, ijtimoiy", B: "jismoniy, aqliy, ma’naviy", C: "hissiy, aqliy, tashkiliy", D: "ijtimoiy, ma’naviy, jismoniy" } },
-  { n: 27, q: "O‘lchanadigan maqsad nimani talab qiladi?",
-    opts: { A: "maqsad qisqa muddatli bo‘lishini", B: "natijani raqam yoki aniq ko‘rsatkichda ifodalashni", C: "maqsadning talabaga qiziqarli bo‘lishini", D: "maqsadni rahbar tasdiqlashini" } },
-  { n: 28, q: "Ziddiyatli ota-ona bilan muloqotda o‘qituvchidan bir vaqtda talab etiladigan uch narsaga qaysi biri kirmaydi?",
-    opts: { A: "empatiya", B: "o‘zini boshqarish", C: "kasbiy munosabatni saqlash", D: "ota-onaning fikriga qo‘shilish" } }
-];
-
-/* C qismi. Variantlar talabaga ko'rinadigan tartibda, ballsiz.
-   Yuborilganda tanlangan variantning tartib raqami (0..3) ketadi. */
-const QISM_C = [
-  { n: 29,
-    sit: "Odatda faol qatnashadigan o‘quvchi bir haftadan beri darsda jim o‘tiribdi, savollarga qisqa javob beradi, tanaffusda yolg‘iz qoladi.",
-    opts: [
-      "Vaqtinchalik holat deb, bir-ikki hafta kuzataman",
-      "Dars oxirida yolg‘iz qolganda holidan xabar olaman",
-      "Darsda ko‘proq savol berib, uni faollashtirishga urinaman",
-      "Ota-onasiga qo‘ng‘iroq qilib, uyda nima bo‘lganini so‘rayman"
-    ] },
-  { n: 30,
-    sit: "Uchinchi marta tushuntirganingizdan keyin ham sinfning yarmi topshiriqni noto‘g‘ri bajardi. Jahlingiz chiqyapti.",
-    opts: [
-      "Topshiriqni uyga beraman, darsni davom ettiraman",
-      "Charchaganimni aytib, mustaqil ishlashlarini so‘rayman",
-      "Bir daqiqa to‘xtab, o‘zimni bosaman, keyin tushuntirish usulini o‘zgartiraman",
-      "Ovozimni ko‘tarmasdan, e’tiborsizlik uchun tanbeh beraman"
-    ] },
-  { n: 31,
-    sit: "Doskada masala yechayotgan o‘quvchi xato qildi, sinfda kulgi ko‘tarildi.",
-    opts: [
-      "O‘quvchini joyiga o‘tqazib, boshqasini chaqiraman",
-      "Kulganlarga tanbeh berib, o‘quvchiga yechishni davom ettirishni aytaman",
-      "Xatoni o‘zim tuzatib, darsni davom ettiraman",
-      "Kulgini to‘xtatib, xatoning qayeridan boshlanganini birga topamiz"
-    ] },
-  { n: 32,
-    sit: "Ota-ona darsdan keyin keskin ohangda farzandiga past baho qo‘yilganidan norozi ekanini aytdi.",
-    opts: [
-      "Avval uni to‘liq eshitaman, keyin bahoning qanday qo‘yilganini ko‘rsataman",
-      "Suhbatni boshqa kunga ko‘chiraman",
-      "Baho mezonlarini darrov tushuntirib, adolatli ekanini asoslayman",
-      "Bahoni qayta ko‘rib chiqishga va’da beraman"
-    ] },
-  { n: 33,
-    sit: "Dars yakunida siz bir o‘quvchiga keskin gapirib qo‘yganingizni angladingiz.",
-    opts: [
-      "Keyingi darsda unga ko‘proq e’tibor berib, holatni yumshataman",
-      "Keyingi tanaffusda o‘quvchi bilan alohida gaplashib, holatimni tushuntiraman",
-      "O‘quvchi sezmagan bo‘lsa kerak deb, e’tibor bermayman",
-      "O‘zimga qayd qilib qo‘yaman"
-    ] }
-];
-
-const QISM_D = [
-  { n: 34, text: "Amaliyot paytida o‘zimni talaba emas, o‘qituvchi kabi his qilaman" },
-  { n: 35, text: "Bolaning kayfiyati uchun javobgarlikni o‘z zimmamga olaman" },
-  { n: 36, text: "Tajribali o‘qituvchilarning ish uslubini o‘zimga yaqin deb bilmayman" },
-  { n: 37, text: "Bolalarning ishonchini qozonishni dars o‘tish bilan teng ko‘raman" },
-  { n: 38, text: "Kasbning emotsional yuki meni cho‘chitadi" },
-  { n: 39, text: "O‘n yildan keyin ham o‘zimni boshlang‘ich sinf o‘qituvchisi sifatida tasavvur qilaman" }
-];
-
-const QISM_E = [
-  { n: 40, text: "Dars tugagach, nima yaxshi, nima yomon ketganini o‘zim uchun aniqlab olaman" },
-  { n: 41, text: "Dars davomida rejam ishlamayotganini sezsam, shu zahoti usulni o‘zgartiraman" },
-  { n: 42, text: "Voqeani o‘quvchining ko‘zi bilan ham ko‘rishga urinaman" },
-  { n: 43, text: "Dars muvaffaqiyatsiz o‘tsa, sababini ko‘proq bolalarning tayyorgarligidan izlayman" },
-  { n: 44, text: "O‘z tahlilimdan keyingi darsga aniq bir qaror chiqaraman" },
-  { n: 45, text: "O‘tgan darsni qayta o‘ylashga vaqtim ham, xohishim ham bo‘lmaydi" }
-];
-
-const QISMLAR = [
-  { id: "A", nom: "Emotsional holatni tanish va boshqarish", tur: "likert",  bandlar: QISM_A },
-  { id: "B", nom: "Nazariy bilim",                            tur: "bilim",   bandlar: QISM_B },
-  { id: "C", nom: "Pedagogik vaziyatlar",                     tur: "vaziyat", bandlar: QISM_C },
-  { id: "D", nom: "Kasbiy-emotsional identifikatsiya",        tur: "likert",  bandlar: QISM_D },
-  { id: "E", nom: "Refleksiya",                               tur: "likert",  bandlar: QISM_E }
-];
-
-/* Natija ekranida ko'rsatiladigan mezonlar. Ballni baza qaytaradi. */
-const MEZONLAR = [
-  { id: "bilim",     nom: "Bilim",                  maks: 8,  manba: "B qismi" },
-  { id: "amaliy",    nom: "Emotsional-amaliy",      maks: 75, manba: "A va C qismlari" },
-  { id: "refleksiv", nom: "Refleksiv",              maks: 18, manba: "E qismi" },
-  { id: "kasbiy",    nom: "Kasbiy-identifikatsion", maks: 18, manba: "D qismi" }
-];
-
-
 (function () {
   "use strict";
 
-  var QORALAMA = "sorovnoma_qoralama_v1";
+  var KOD_KALIT = "platforma_kod";
+  var kod = "", guruh = "", holat = { kundalik: [], tayyorgarlik: [] };
+  var sozlama = { faol_nuqtalar: "", ochiq_mashgulot: 1 };
+  var joriy = null;           // ochiq mashg'ulot obyekti
+  var testJavob = {};         // savol tartibi -> tanlangan variant
+  var kTopshiriq = "";
+  var joriyEkran = "kirish";
 
-  var javoblar = {};
-  var kod = "", nuqta = "", guruh = "", qismIdx = 0, boshlanganVaqt = null;
-  var yuborilmoqda = false;
-
-  var el = function (id) { return document.getElementById(id); };
-  var mat = function (s) { return document.createTextNode(s); };
-
-  /* ---------- qurilmada saqlash ---------- */
-  function qoralamaYoz() {
-    try {
-      localStorage.setItem(QORALAMA, JSON.stringify({
-        kod: kod, nuqta: nuqta, guruh: guruh, qismIdx: qismIdx,
-        javoblar: javoblar, boshlangan: boshlanganVaqt
-      }));
-    } catch (e) { /* xotira yopiq bo'lsa, e'tiborsiz qoldiriladi */ }
-  }
-  function qoralamaOqi() {
-    try {
-      var s = localStorage.getItem(QORALAMA);
-      if (!s) return null;
-      var d = JSON.parse(s);
-      if (!d || !d.kod || !d.nuqta) return null;
-      return d;
-    } catch (e) { return null; }
-  }
-  function qoralamaOchir() {
-    try { localStorage.removeItem(QORALAMA); } catch (e) {}
-  }
-
-  /* ---------- baza bilan aloqa ---------- */
-  function sbRpc(nom, tana) {
-    var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
-    var vaqt = setTimeout(function () { if (ctrl) ctrl.abort(); }, 20000);
-    var sozlama = {
-      method: "POST",
-      headers: {
-        "apikey": SB_KEY,
-        "Authorization": "Bearer " + SB_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(tana)
-    };
-    if (ctrl) sozlama.signal = ctrl.signal;
-    return fetch(SB_URL + "/rest/v1/rpc/" + nom, sozlama)
-      .then(function (r) {
-        return r.text().then(function (t) {
-          clearTimeout(vaqt);
-          var j = null;
-          try { j = JSON.parse(t); } catch (e) {}
-          if (!r.ok) return { xato: "server", status: r.status, body: j };
-          return { ok: true, body: j };
-        });
-      })
-      .catch(function () { clearTimeout(vaqt); return { xato: "tarmoq" }; });
-  }
-
-  /* ---------- ekranlar ---------- */
-  function ekran(nom) {
-    el("e-kirish").hidden = nom !== "kirish";
-    el("e-qism").hidden   = nom !== "qism";
-    el("e-natija").hidden = nom !== "natija";
-    el("bar").hidden      = nom !== "qism";
+  /* ---------------- ekranlar ---------------- */
+  function ekran(nom, sarlavha) {
+    joriyEkran = nom;
+    ["kirish", "bosh", "mashgulot", "kundalik"].forEach(function (e) {
+      el("e-" + e).hidden = e !== nom;
+    });
+    el("bar").hidden = nom === "kirish";
+    el("bar-nom").textContent = sarlavha || "Bosh sahifa";
+    el("bar-kod").textContent = kod;
+    el("bar-orqaga").textContent = nom === "bosh" ? "Chiqish" : "Orqaga";
     window.scrollTo(0, 0);
   }
 
-  /* ---------- kirish ---------- */
-  function qoralamaniKorsat() {
-    var d = qoralamaOqi();
-    if (!d) { el("qoralama-panel").hidden = true; return; }
-    el("qoralama-panel").hidden = false;
-    el("qoralama-matn").textContent =
-      "Tugallanmagan to‘ldirish topildi: " + d.kod + ", " + d.nuqta + "-test.";
+  function marshrut() {
+    if (!kod) { ekran("kirish"); return; }
+    var h = (location.hash || "").replace("#", "");
+    var m = h.match(/^(m|k)(\d{1,2})$/);
+    if (m) {
+      var n = parseInt(m[2], 10);
+      var obj = MASHGULOTLAR.filter(function (x) { return x.n === n; })[0];
+      if (obj && tajribaGuruhimi(guruh) && n <= sozlama.ochiq_mashgulot) {
+        if (m[1] === "m") mashgulotChiz(obj); else kundalikChiz(obj);
+        return;
+      }
+    }
+    if (h) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
+    boshChiz();
+  }
+  window.addEventListener("hashchange", marshrut);
+
+  el("bar-orqaga").addEventListener("click", function () {
+    if (joriyEkran === "kundalik" && joriy) { location.hash = "#m" + joriy.n; return; }
+    if (joriyEkran === "mashgulot") { location.hash = ""; return; }
+    xotiraOchir(KOD_KALIT);
+    kod = ""; guruh = "";
+    el("kod").value = "";
+    if (location.hash) location.hash = ""; else ekran("kirish");
+  });
+
+  /* ---------------- kirish ---------------- */
+  function yuklash(k, xabarEl) {
+    xabarEl.textContent = "Tekshirilmoqda…";
+    return Promise.all([
+      sbRpc("talaba_holat", { p_kod: k }),
+      sbRpc("platforma_holat", {})
+    ]).then(function (r) {
+      var a = r[0], b = r[1];
+      if (a.xato) { xabarEl.textContent = xatoMatni(a); return false; }
+      if (!a.body || a.body.holat !== "ok") {
+        xabarEl.textContent = "Bunday kod ro‘yxatda yo‘q. Kodni tekshirib, qayta kiriting.";
+        return false;
+      }
+      kod = k; guruh = a.body.guruh || "";
+      holat.kundalik = a.body.kundalik || [];
+      holat.tayyorgarlik = a.body.tayyorgarlik || [];
+      if (b.ok && b.body) {
+        sozlama.faol_nuqtalar = b.body.faol_nuqtalar || "";
+        sozlama.ochiq_mashgulot = parseInt(b.body.ochiq_mashgulot, 10) || 1;
+      }
+      xotiraYoz(KOD_KALIT, kod);
+      xabarEl.textContent = "";
+      return true;
+    });
   }
 
-  el("davom").addEventListener("click", function () {
-    var d = qoralamaOqi();
-    if (!d) { qoralamaniKorsat(); return; }
-    kod = d.kod; nuqta = d.nuqta; guruh = d.guruh || "";
-    javoblar = d.javoblar || {};
-    qismIdx = Math.min(Math.max(d.qismIdx || 0, 0), QISMLAR.length - 1);
-    boshlanganVaqt = d.boshlangan || new Date().toISOString();
-    qismChiz();
-    ekran("qism");
-  });
-
-  el("boshqatdan").addEventListener("click", function () {
-    qoralamaOchir();
-    qoralamaniKorsat();
-  });
-
-  el("boshla").addEventListener("click", function () {
+  el("kirish-tugma").addEventListener("click", function () {
     var k = el("kod").value.trim().toUpperCase();
-    var nq = el("nuqta").value;
-    if (!k)  { el("kirish-xabar").textContent = "Talaba kodini kiriting."; el("kod").focus(); return; }
-    if (!nq) { el("kirish-xabar").textContent = "O‘lchov nuqtasini tanlang."; el("nuqta").focus(); return; }
-
-    el("boshla").disabled = true;
-    el("kirish-xabar").textContent = "Kod tekshirilmoqda…";
-
-    sbRpc("kod_tekshir", { p_kod: k }).then(function (j) {
-      el("boshla").disabled = false;
-      if (j.xato === "tarmoq") {
-        el("kirish-xabar").textContent = "Internetga ulanib bo‘lmadi. Aloqani tekshirib, qayta urining.";
-        return;
-      }
-      if (j.xato) {
-        el("kirish-xabar").textContent = "Server javob bermadi. Birozdan keyin qayta urining.";
-        return;
-      }
-      var q = j.body && j.body[0];
-      if (!q) {
-        el("kirish-xabar").textContent = "Bunday kod ro‘yxatda yo‘q. Kodni tekshirib, qayta kiriting.";
-        return;
-      }
-      var topshirilgan = q.topshirilgan || [];
-      if (topshirilgan.indexOf(nq) >= 0) {
-        el("kirish-xabar").textContent = "Bu kod bilan " + nq + "-test allaqachon topshirilgan.";
-        return;
-      }
-      kod = q.kod; guruh = q.guruh; nuqta = nq;
-      javoblar = {}; qismIdx = 0;
-      boshlanganVaqt = new Date().toISOString();
-      el("kirish-xabar").textContent = "";
-      qoralamaYoz();
-      qismChiz();
-      ekran("qism");
+    if (!k) { el("kirish-xabar").textContent = "Talaba kodini kiriting."; el("kod").focus(); return; }
+    el("kirish-tugma").disabled = true;
+    yuklash(k, el("kirish-xabar")).then(function (ok) {
+      el("kirish-tugma").disabled = false;
+      if (ok) marshrut();
     });
   });
+  el("kod").addEventListener("keydown", function (e) { if (e.key === "Enter") el("kirish-tugma").click(); });
 
-  /* ---------- savollar ---------- */
-  function tugma(ichki, tanlandi, bosildi) {
-    var b = document.createElement("button");
-    b.type = "button";
-    ichki(b);
-    if (tanlandi) b.classList.add("tanlangan");
-    b.addEventListener("click", bosildi);
-    return b;
-  }
+  /* ---------------- bosh sahifa ---------------- */
+  function boshChiz() {
+    el("bosh-guruh").textContent = (guruh ? guruh + "-guruh" : "") + (muassasa(guruh) ? " · " + muassasa(guruh) : "");
 
-  function belgila(guruhEl, tugmasi, n, qiymat) {
-    var hammasi = guruhEl.querySelectorAll("button");
-    for (var i = 0; i < hammasi.length; i++) hammasi[i].classList.remove("tanlangan");
-    tugmasi.classList.add("tanlangan");
-    javoblar[n] = qiymat;
-    var karta = tugmasi.closest(".savol");
-    if (karta) karta.classList.remove("javobsiz");
-    el("qism-xabar").textContent = "";
-    qoralamaYoz();
-  }
-
-  function savolKarta(n) {
-    var d = document.createElement("div");
-    d.className = "savol";
-    d.id = "savol-" + n;
-    return d;
-  }
-
-  function sarlavhaQator(n, matn, kursiv) {
-    var q = document.createElement("div"); q.className = "q";
-    var a = document.createElement("div"); a.className = "q-n"; a.appendChild(mat(String(n)));
-    var b = document.createElement("div"); b.className = "q-t";
-    if (kursiv) { var v = document.createElement("div"); v.className = "vaziyat"; v.appendChild(mat(matn)); b.appendChild(v); }
-    else b.appendChild(mat(matn));
-    q.appendChild(a); q.appendChild(b);
-    return q;
-  }
-
-  function likertSavol(band) {
-    var d = savolKarta(band.n);
-    d.appendChild(sarlavhaQator(band.n, band.text, false));
-    var g = document.createElement("div"); g.className = "likert";
-    for (var i = 0; i < 4; i++) {
-      (function (v) {
-        g.appendChild(tugma(function (b) {
-          var s2 = document.createElement("span"); s2.className = "b-mat"; s2.appendChild(mat(SHKALA[v]));
-          b.appendChild(s2);
-          b.setAttribute("aria-label", band.n + "-band: " + SHKALA[v]);
-        }, javoblar[band.n] === String(v), function (ev) { belgila(g, ev.currentTarget, band.n, String(v)); }));
-      })(i);
+    var faol = sozlama.faol_nuqtalar ? sozlama.faol_nuqtalar.split(",") : [];
+    var NOM = { PRE: "dastlabki", MID: "oraliq", POST: "yakuniy" };
+    if (faol.length) {
+      el("sorov-izoh").textContent = "Hozir ochiq o‘lchov: " + faol.map(function (x) { return NOM[x] || x; }).join(", ") +
+        ". 45 savol, taxminan 25 daqiqa.";
+      el("sorov-tugma").disabled = false;
+    } else {
+      el("sorov-izoh").textContent = "Hozir o‘lchov o‘tkazilmayapti.";
+      el("sorov-tugma").disabled = true;
     }
-    d.appendChild(g);
-    return d;
+
+    var tajriba = tajribaGuruhimi(guruh);
+    el("mashgulot-bolim").hidden = !tajriba;
+    if (tajriba) royxatChiz();
+    ekran("bosh", "Bosh sahifa");
   }
 
-  function bilimSavol(band) {
-    var d = savolKarta(band.n);
-    d.appendChild(sarlavhaQator(band.n, band.q, false));
-    var g = document.createElement("div"); g.className = "qator";
-    ["A", "B", "C", "D"].forEach(function (h) {
-      g.appendChild(tugma(function (b) {
-        var s1 = document.createElement("span"); s1.className = "b-harf"; s1.appendChild(mat(h));
-        var s2 = document.createElement("span"); s2.className = "b-mat"; s2.appendChild(mat(band.opts[h]));
-        b.appendChild(s1); b.appendChild(s2);
-      }, javoblar[band.n] === h, function (ev) { belgila(g, ev.currentTarget, band.n, h); }));
+  el("sorov-tugma").addEventListener("click", function () {
+    window.location.href = "sorovnoma.html?kod=" + encodeURIComponent(kod);
+  });
+
+  function royxatChiz() {
+    var uy = el("mashgulot-royxat");
+    tozala(uy);
+    [1, 2, 3].forEach(function (mn) {
+      uy.appendChild(yarat("div", "modul-sarlavha", mn + "-modul. " + MODULLAR[mn].nom));
+      var kartalar = yarat("div", "kartalar");
+      MASHGULOTLAR.filter(function (m) { return m.modul === mn; }).forEach(function (m) {
+        var ochiq = m.n <= sozlama.ochiq_mashgulot;
+        var b = yarat("button", "karta");
+        b.type = "button";
+        if (!ochiq) b.disabled = true;
+        var bosh = yarat("div", "k-bosh");
+        bosh.appendChild(yarat("span", "k-n", m.n));
+        bosh.appendChild(yarat("span", "k-nom", m.nom));
+        b.appendChild(bosh);
+        b.appendChild(yarat("div", "k-fan", m.fan));
+        var h = yarat("div", "k-holat");
+        if (!ochiq) h.appendChild(yarat("span", "chip", "hali ochilmagan"));
+        else {
+          var t = holat.tayyorgarlik.indexOf(m.n) >= 0;
+          var k = holat.kundalik.indexOf(m.n) >= 0;
+          h.appendChild(yarat("span", "chip" + (t ? " bor" : ""), t ? "tekshiruv bajarildi" : "tekshiruv kutilmoqda"));
+          h.appendChild(yarat("span", "chip" + (k ? " bor" : ""), k ? "kundalik yozildi" : "kundalik yozilmagan"));
+        }
+        b.appendChild(h);
+        if (ochiq) b.addEventListener("click", function () { location.hash = "#m" + m.n; });
+        kartalar.appendChild(b);
+      });
+      uy.appendChild(kartalar);
     });
-    d.appendChild(g);
-    return d;
   }
 
-  function vaziyatSavol(band) {
-    var d = savolKarta(band.n);
-    d.appendChild(sarlavhaQator(band.n, band.sit, true));
-    var g = document.createElement("div"); g.className = "qator";
-    band.opts.forEach(function (matni, idx) {
-      g.appendChild(tugma(function (b) {
-        var s2 = document.createElement("span"); s2.className = "b-mat"; s2.appendChild(mat(matni));
-        b.appendChild(s2);
-      }, javoblar[band.n] === String(idx), function (ev) { belgila(g, ev.currentTarget, band.n, String(idx)); }));
+  /* ---------------- mashg'ulot ---------------- */
+  function mashgulotChiz(m) {
+    joriy = m;
+    testJavob = {};
+    el("m-modul").textContent = m.modul + "-modul. " + MODULLAR[m.modul].nom + " · " + m.n + "-mashg‘ulot";
+    el("m-nom").textContent = m.nom;
+    el("m-fan").textContent = "Fan mavzusi: " + m.fan;
+    el("m-maqsad").textContent = m.maqsad;
+    el("m-tarkibiy").textContent = m.tarkibiy;
+    el("m-mahsulot").textContent = m.mahsulot;
+
+    var ul = el("m-natijalar"); tozala(ul);
+    m.natijalar.forEach(function (t) { ul.appendChild(yarat("li", "", t)); });
+
+    var oq = el("m-oqish"); tozala(oq);
+    m.oqish.forEach(function (t) { oq.appendChild(yarat("p", "", t)); });
+
+    el("m-topshiriq").textContent = m.topshiriq;
+    savollarChiz(false);
+    ekran("mashgulot", m.n + "-mashg‘ulot");
+  }
+
+  function savollarChiz(tekshirilgan) {
+    var uy = el("m-savollar"); tozala(uy);
+    joriy.savollar.forEach(function (s, i) {
+      var d = yarat("div", "savol"); d.id = "sv-" + i;
+      d.appendChild(yarat("div", "q", (i + 1) + ". " + s.q));
+      var g = yarat("div", "variantlar");
+      s.v.forEach(function (matn, vi) {
+        var b = yarat("button"); b.type = "button";
+        b.appendChild(yarat("span", "harf", "ABCD".charAt(vi)));
+        b.appendChild(yarat("span", "", matn));
+        if (testJavob[i] === vi) b.classList.add("tanlangan");
+        if (tekshirilgan) {
+          b.disabled = true;
+          if (vi === s.t) b.classList.add("togri");
+          else if (testJavob[i] === vi) b.classList.add("notogri");
+        } else {
+          b.addEventListener("click", function () {
+            testJavob[i] = vi;
+            var hamma = g.querySelectorAll("button");
+            for (var x = 0; x < hamma.length; x++) hamma[x].classList.remove("tanlangan");
+            b.classList.add("tanlangan");
+            d.classList.remove("javobsiz");
+            el("m-xabar").textContent = "";
+          });
+        }
+        g.appendChild(b);
+      });
+      d.appendChild(g);
+      if (tekshirilgan) {
+        d.appendChild(yarat("p", "izoh", (testJavob[i] === s.t ? "To‘g‘ri. " : "To‘g‘ri javob: " + "ABCD".charAt(s.t) + ". ") + s.izoh));
+      }
+      uy.appendChild(d);
     });
-    d.appendChild(g);
-    return d;
+    el("m-tekshir").hidden = !!tekshirilgan;
+    el("m-qayta").hidden = !tekshirilgan;
   }
 
-  /* ---------- qism ---------- */
-  var IZOH = {
-    likert: "Har bir fikr uchun o‘zingizga eng mos keladigan bitta javobni tanlang.",
-    bilim:  "Har bir savolning bitta to‘g‘ri javobi bor.",
-    vaziyat:"Har bir vaziyatda o‘zingiz amalda qanday yo‘l tutishingizga eng yaqin variantni tanlang."
-  };
-
-  function toldirilmaganlar(qism) {
+  el("m-tekshir").addEventListener("click", function () {
     var yoq = [];
-    for (var i = 0; i < qism.bandlar.length; i++) {
-      var n = qism.bandlar[i].n;
-      if (javoblar[n] === undefined || javoblar[n] === null || javoblar[n] === "") yoq.push(n);
-    }
-    return yoq;
-  }
-
-  function qismChiz() {
-    var q = QISMLAR[qismIdx];
-    el("bar-nom").textContent = q.id + " qismi — " + q.nom;
-    el("bar-son").textContent = (qismIdx + 1) + " / " + QISMLAR.length;
-    el("track-i").style.width = Math.round((qismIdx / QISMLAR.length) * 100) + "%";
-    el("qism-sarlavha").textContent = q.id + " qismi. " + q.nom;
-    el("qism-izoh").textContent = IZOH[q.tur];
-    el("orqaga").disabled = qismIdx === 0;
-    el("keyingi").disabled = false;
-    el("keyingi").textContent = qismIdx === QISMLAR.length - 1 ? "Yakunlash" : "Keyingisi";
-    el("qism-xabar").textContent = "";
-
-    var uy = el("bandlar");
-    while (uy.firstChild) uy.removeChild(uy.firstChild);
-    q.bandlar.forEach(function (band) {
-      uy.appendChild(q.tur === "likert" ? likertSavol(band)
-                   : q.tur === "bilim"  ? bilimSavol(band)
-                                        : vaziyatSavol(band));
-    });
-    window.scrollTo(0, 0);
-  }
-
-  el("orqaga").addEventListener("click", function () {
-    if (qismIdx > 0) { qismIdx--; qoralamaYoz(); qismChiz(); }
-  });
-
-  el("keyingi").addEventListener("click", function () {
-    if (yuborilmoqda) return;
-    var q = QISMLAR[qismIdx];
-    var yoq = toldirilmaganlar(q);
+    joriy.savollar.forEach(function (s, i) { if (testJavob[i] === undefined) yoq.push(i); });
     if (yoq.length) {
-      yoq.forEach(function (n) {
-        var k = el("savol-" + n);
-        if (k) k.classList.add("javobsiz");
-      });
-      el("qism-xabar").textContent = yoq.length + " ta savol javobsiz qoldi.";
-      var birinchi = el("savol-" + yoq[0]);
-      if (birinchi) birinchi.scrollIntoView({ block: "center" });
+      yoq.forEach(function (i) { el("sv-" + i).classList.add("javobsiz"); });
+      el("m-xabar").textContent = yoq.length + " ta savol javobsiz qoldi.";
       return;
     }
-    if (qismIdx < QISMLAR.length - 1) { qismIdx++; qoralamaYoz(); qismChiz(); }
-    else yubor();
+    var togri = 0;
+    joriy.savollar.forEach(function (s, i) { if (testJavob[i] === s.t) togri++; });
+    savollarChiz(true);
+    var jami = joriy.savollar.length;
+    el("m-xabar").className = "xabar ok";
+    el("m-xabar").textContent = "Natija: " + togri + " / " + jami + ". Saqlanmoqda…";
+    var jav = {};
+    Object.keys(testJavob).forEach(function (k) { jav[String(Number(k) + 1)] = "ABCD".charAt(testJavob[k]); });
+    sbRpc("tayyorgarlik_saqla", { p_kod: kod, p_mashgulot: joriy.n, p_javoblar: jav, p_togri: togri, p_jami: jami })
+      .then(function (j) {
+        if (j.ok && j.body === "saqlandi") {
+          if (holat.tayyorgarlik.indexOf(joriy.n) < 0) holat.tayyorgarlik.push(joriy.n);
+          el("m-xabar").textContent = "Natija: " + togri + " / " + jami + ". Saqlandi.";
+        } else {
+          el("m-xabar").className = "xabar";
+          el("m-xabar").textContent = "Natija: " + togri + " / " + jami + ". Saqlanmadi: " + (j.xato ? xatoMatni(j) : "mashg‘ulot yopiq.");
+        }
+      });
   });
 
-  /* ---------- yuborish ---------- */
-  function yubor() {
-    yuborilmoqda = true;
-    el("keyingi").disabled = true;
-    el("keyingi").textContent = "Yuborilmoqda…";
-    el("qism-xabar").textContent = "";
+  el("m-qayta").addEventListener("click", function () {
+    testJavob = {};
+    el("m-xabar").className = "xabar"; el("m-xabar").textContent = "";
+    savollarChiz(false);
+  });
 
-    sbRpc("javob_saqla", {
-      p_kod: kod, p_nuqta: nuqta,
-      p_javoblar: javoblar, p_boshlangan: boshlanganVaqt
-    }).then(function (j) {
-      yuborilmoqda = false;
-      el("keyingi").disabled = false;
+  el("m-kundalik").addEventListener("click", function () { location.hash = "#k" + joriy.n; });
 
-      if (j.xato) {
-        el("keyingi").textContent = "Qayta yuborish";
-        el("qism-xabar").textContent = j.xato === "tarmoq"
-          ? "Internetga ulanib bo‘lmadi. Javoblaringiz saqlanib turibdi — aloqa tiklanganda qayta yuboring."
-          : "Server javob bermadi. Javoblaringiz saqlanib turibdi — birozdan keyin qayta yuboring.";
-        return;
-      }
+  /* ---------------- kundalik ---------------- */
+  var MIN = 20;
+  function qoralamaKalit() { return "kundalik_" + kod + "_" + joriy.n; }
 
-      var r = j.body && j.body[0];
-      if (!r) {
-        el("keyingi").textContent = "Qayta yuborish";
-        el("qism-xabar").textContent = "Server tushunarsiz javob qaytardi. Qayta urinib ko‘ring.";
-        return;
-      }
-      if (r.holat === "allaqachon_topshirilgan") {
-        el("keyingi").textContent = "Yakunlash";
-        el("qism-xabar").textContent = "Bu kod bilan " + nuqta + "-test allaqachon topshirilgan.";
-        qoralamaOchir();
-        return;
-      }
-      if (r.holat === "kod_topilmadi") {
-        el("keyingi").textContent = "Yakunlash";
-        el("qism-xabar").textContent = "Kod ro‘yxatdan topilmadi. Tekshiruvchiga murojaat qiling.";
-        return;
-      }
-      if (r.holat !== "saqlandi" && r.holat !== "namuna") {
-        el("keyingi").textContent = "Qayta yuborish";
-        el("qism-xabar").textContent = "Javoblar to‘liq emas yoki noto‘g‘ri. Qayta urinib ko‘ring.";
-        return;
-      }
-      qoralamaOchir();
-      natijaChiz(r, r.holat === "namuna");
+  function kundalikQiymatlari() {
+    var j = {};
+    KUNDALIK_BOSQICHLARI.forEach(function (b) { j[b.id] = el("kb-" + b.id).value.trim(); });
+    if (joriy.qiyos) j.qiyos = el("k-qiyos").value.trim();
+    return j;
+  }
+
+  function qoralamaSaqla() {
+    xotiraYoz(qoralamaKalit(), JSON.stringify({ j: kundalikQiymatlari(), t: kTopshiriq }));
+  }
+
+  function hisobYangila(ta, hisobEl) {
+    var n = ta.value.trim().length;
+    hisobEl.textContent = n < MIN ? n + " / kamida " + MIN + " belgi" : n + " belgi";
+  }
+
+  function topshiriqChiz() {
+    var uy = el("k-topshiriq"); tozala(uy);
+    [["bajarildi", "Bajardim"], ["qisman", "Qisman"], ["bajarilmadi", "Bajarmadim"]].forEach(function (v) {
+      var b = yarat("button", v[0] === kTopshiriq ? "tanlangan" : "", v[1]); b.type = "button";
+      b.addEventListener("click", function () { kTopshiriq = v[0]; topshiriqChiz(); qoralamaSaqla(); });
+      uy.appendChild(b);
     });
   }
 
-  /* ---------- natija ---------- */
-  function sana(d) {
-    var p = function (x) { return (x < 10 ? "0" : "") + x; };
-    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) +
-           " " + p(d.getHours()) + ":" + p(d.getMinutes());
-  }
-  function daraja(foiz) {
-    if (foiz <= 33) return "past";
-    if (foiz <= 66) return "o‘rta";
-    return "yuqori";
-  }
-
-  function natijaChiz(r, namuna) {
-    el("natija-sarlavha").textContent = namuna ? "Namuna natijasi" : kod;
-    el("natija-izoh").textContent = nuqta + "-test · " + (guruh ? guruh + " · " : "") + sana(new Date());
-    el("saqlash-xabari").textContent = namuna
-      ? "Bu namuna to‘ldirish. Ball haqiqiy tartibda hisoblandi, lekin javoblar hech qayerda saqlanmadi va tajriba ma’lumotiga qo‘shilmadi."
-      : "Javoblaringiz saqlandi. So‘rovnoma yakunlandi, sahifani yopishingiz mumkin.";
-
-    var tb = el("natija-tbody");
-    while (tb.firstChild) tb.removeChild(tb.firstChild);
-    MEZONLAR.forEach(function (m) {
-      var ball = r[m.id + "_ball"], foiz = r[m.id + "_foiz"];
-      var tr = document.createElement("tr");
-      var c1 = document.createElement("td"); c1.appendChild(mat(m.nom));
-      var c2 = document.createElement("td"); c2.className = "muted small col-manba"; c2.appendChild(mat(m.manba));
-      var c3 = document.createElement("td"); c3.className = "son"; c3.appendChild(mat(ball + " / " + m.maks));
-      var c4 = document.createElement("td"); c4.className = "son"; c4.appendChild(mat(foiz + "%"));
-      var c5 = document.createElement("td");
-      var dj = daraja(foiz);
-      var sp = document.createElement("span"); sp.className = "dj " + (dj === "yuqori" ? "yuqori" : "");
-      sp.appendChild(mat(dj)); c5.appendChild(sp);
-      [c1, c2, c3, c4, c5].forEach(function (c) { tr.appendChild(c); });
-      tb.appendChild(tr);
+  function maydonlarniTold(j, t) {
+    KUNDALIK_BOSQICHLARI.forEach(function (b) {
+      var ta = el("kb-" + b.id);
+      ta.value = (j && j[b.id]) || "";
+      hisobYangila(ta, el("kh-" + b.id));
     });
-
-    var bosh = ["kod", "nuqta", "guruh", "sana"];
-    var qiy  = [kod, nuqta, guruh, sana(new Date())];
-    MEZONLAR.forEach(function (m) {
-      bosh.push(m.id + "_ball", m.id + "_foiz");
-      qiy.push(r[m.id + "_ball"], r[m.id + "_foiz"]);
-    });
-    for (var n = 1; n <= 45; n++) {
-      bosh.push("j" + n);
-      qiy.push(javoblar[n] === undefined ? "" : javoblar[n]);
-    }
-    el("qator-matn").value = bosh.join(",") + "\n" + qiy.join(",");
-    el("natija-xabar").textContent = "";
-    el("track-i").style.width = "100%";
-    ekran("natija");
+    if (joriy.qiyos) { el("k-qiyos").value = (j && j.qiyos) || ""; hisobYangila(el("k-qiyos"), el("k-qiyos-hisob")); }
+    kTopshiriq = t || "";
+    topshiriqChiz();
   }
 
-  el("nusxa").addEventListener("click", function () {
-    var t = el("qator-matn");
-    t.focus(); t.select();
-    var ok = false;
-    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
-    if (!ok && navigator.clipboard) {
-      navigator.clipboard.writeText(t.value).then(function () {
-        el("natija-xabar").textContent = "Nusxalandi.";
-      }, function () {
-        el("natija-xabar").textContent = "Nusxalanmadi — matnni belgilab, qo‘lda nusxalang.";
+  function kundalikChiz(m) {
+    joriy = m;
+    el("k-nom").textContent = m.n + "-mashg‘ulot. " + m.nom;
+    el("k-xabar").className = "xabar"; el("k-xabar").textContent = "";
+    el("k-qiyos-natija").hidden = true;
+
+    el("k-qiyos-panel").hidden = !m.qiyos;
+    el("k-qiyos-vaziyat").textContent = QIYOS_VAZIYAT;
+    el("k-topshiriq-blok").hidden = m.n === 1;
+
+    var uy = el("k-bosqichlar"); tozala(uy);
+    KUNDALIK_BOSQICHLARI.forEach(function (b, i) {
+      var d = yarat("div", "bosqich");
+      var nom = yarat("div", "b-nom");
+      nom.appendChild(yarat("span", "b-n", (i + 1) + "."));
+      nom.appendChild(yarat("span", "", b.nom));
+      d.appendChild(nom);
+      d.appendChild(yarat("div", "b-savol", b.savol));
+      var ta = yarat("textarea"); ta.id = "kb-" + b.id; ta.setAttribute("aria-label", b.nom);
+      var h = yarat("div", "hisob"); h.id = "kh-" + b.id;
+      ta.addEventListener("input", function () { hisobYangila(ta, h); qoralamaSaqla(); });
+      d.appendChild(ta); d.appendChild(h);
+      uy.appendChild(d);
+    });
+    el("k-qiyos").oninput = function () { hisobYangila(el("k-qiyos"), el("k-qiyos-hisob")); qoralamaSaqla(); };
+
+    /* avval qoralama, keyin bazadagi yozuv */
+    var q = null;
+    try { q = JSON.parse(xotiraOl(qoralamaKalit()) || "null"); } catch (e) { q = null; }
+    maydonlarniTold(q && q.j, q && q.t);
+    ekran("kundalik", m.n + "-mashg‘ulot kundaligi");
+
+    if (!q) {
+      el("k-xabar").textContent = "Yuklanmoqda…";
+      sbRpc("kundalik_ol", { p_kod: kod, p_mashgulot: m.n }).then(function (r) {
+        el("k-xabar").textContent = "";
+        if (r.ok && r.body && r.body.javoblar && joriy === m) {
+          maydonlarniTold(r.body.javoblar, r.body.topshiriq);
+          el("k-xabar").className = "xabar ok";
+          el("k-xabar").textContent = "Avval saqlangan kundalik ochildi (" + sanaMatn(r.body.yangilangan) + ").";
+        }
       });
+    }
+  }
+
+  el("k-saqla").addEventListener("click", function () {
+    var j = kundalikQiymatlari();
+    var kam = [];
+    KUNDALIK_BOSQICHLARI.forEach(function (b) {
+      var ta = el("kb-" + b.id);
+      if (j[b.id].length < MIN) { kam.push(b.nom); ta.classList.add("javobsiz"); }
+      else ta.classList.remove("javobsiz");
+    });
+    if (joriy.qiyos && j.qiyos.length < MIN) kam.push("Vaziyatga javob");
+    el("k-xabar").className = "xabar";
+    if (kam.length) {
+      el("k-xabar").textContent = "Quyidagilarni to‘ldiring: " + kam.join(", ") + ".";
       return;
     }
-    el("natija-xabar").textContent = ok ? "Nusxalandi." : "Nusxalanmadi — matnni belgilab, qo‘lda nusxalang.";
+    if (joriy.n > 1 && !kTopshiriq) {
+      el("k-xabar").textContent = "Amaliyot topshirig‘ini bajarganingizni belgilang.";
+      return;
+    }
+    el("k-saqla").disabled = true;
+    el("k-xabar").textContent = "Saqlanmoqda…";
+    var m = joriy;
+    sbRpc("kundalik_saqla", { p_kod: kod, p_mashgulot: m.n, p_javoblar: j, p_topshiriq: kTopshiriq || null })
+      .then(function (r) {
+        el("k-saqla").disabled = false;
+        if (r.ok && r.body === "saqlandi") {
+          xotiraOchir("kundalik_" + kod + "_" + m.n);
+          if (holat.kundalik.indexOf(m.n) < 0) holat.kundalik.push(m.n);
+          el("k-xabar").className = "xabar ok";
+          el("k-xabar").textContent = "Kundalik saqlandi. Keyinroq qaytib tahrirlashingiz mumkin.";
+          if (m.n === 12) qiyosKorsat(j.qiyos);
+        } else if (r.ok && r.body === "yopiq") {
+          el("k-xabar").textContent = "Bu mashg‘ulot kundaligi hozir yopiq.";
+        } else {
+          el("k-xabar").textContent = (r.xato ? xatoMatni(r) : "Saqlanmadi.") + " Yozganingiz shu qurilmada saqlanib turibdi.";
+        }
+      });
   });
 
-  el("qayta").addEventListener("click", function () {
-    javoblar = {}; qismIdx = 0; kod = ""; nuqta = ""; guruh = "";
-    boshlanganVaqt = null;
-    el("kod").value = ""; el("nuqta").value = "";
-    el("kirish-xabar").textContent = "";
-    el("track-i").style.width = "0%";
-    qoralamaOchir();
-    qoralamaniKorsat();
+  function qiyosKorsat(yangi) {
+    sbRpc("kundalik_ol", { p_kod: kod, p_mashgulot: 1 }).then(function (r) {
+      var eski = r.ok && r.body && r.body.javoblar && r.body.javoblar.qiyos;
+      el("k-q1").textContent = eski || "1-mashg‘ulot kundaligida bu javob yozilmagan.";
+      el("k-q12").textContent = yangi;
+      el("k-qiyos-natija").hidden = false;
+    });
+  }
+
+  /* ---------------- boshlash ---------------- */
+  var manzilKod = manzilParam("kod").toUpperCase();
+  var saqlangan = (xotiraOl(KOD_KALIT) || "").toUpperCase();
+  var boshKod = /^[A-Z0-9-]{1,20}$/.test(manzilKod) ? manzilKod : saqlangan;
+  if (boshKod) {
+    el("kod").value = boshKod;
+    yuklash(boshKod, el("kirish-xabar")).then(function (ok) { if (ok) marshrut(); else ekran("kirish"); });
+  } else {
     ekran("kirish");
-  });
-
-  /* QR orqali kelinganda manzildagi kod maydonga qo'yiladi */
-  (function () {
-    try {
-      var m = (window.location.search || "").match(/[?&]kod=([^&]+)/);
-      if (!m) return;
-      var k = decodeURIComponent(m[1]).trim().toUpperCase();
-      if (/^[A-Z0-9-]{1,20}$/.test(k)) el("kod").value = k;
-    } catch (e) { /* manzil o'qilmasa, maydon bo'sh qoladi */ }
-  })();
-
-  qoralamaniKorsat();
+  }
 })();
 </script>
 </body>

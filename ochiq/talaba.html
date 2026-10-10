@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talaba materiallari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="uslub.css">
+</head>
+<body>
+<div class="yuqori-bar"><div class="ichki">
+  <div class="nom" id="bar-nom">Talaba materiallari</div>
+  <a class="orqaga" id="bar-orqaga" href="index.html">Bosh sahifa</a>
+</div></div>
+
+<main class="wrap">
+  <!-- ro'yxat -->
+  <section id="s-royxat">
+    <h1>12 mashg‘ulot materiallari</h1>
+    <p class="muted">Mashg‘ulotdan oldin matnni o‘qing va uchta savolga javob bering. Mashg‘ulotdan keyin refleksiv kundalikni yozing. Javoblaringiz faqat shu qurilmada saqlanadi.</p>
+    <div id="royxat"></div>
+  </section>
+
+  <!-- mashg'ulot -->
+  <section id="s-mash" hidden>
+    <p class="kicker" id="m-kicker"></p>
+    <h1 id="m-nom"></h1>
+    <p id="m-maqsad"></p>
+    <div class="panel">
+      <h3 style="margin-top:0">Mashg‘ulotdan keyin siz</h3>
+      <ul class="toza" id="m-natijalar"></ul>
+      <p class="small muted" style="margin:0">Asosiy tarkibiy qism: <span id="m-tarkibiy"></span></p>
+    </div>
+    <h2>O‘qish uchun matn</h2>
+    <div class="oqish" id="m-oqish"></div>
+    <h2>O‘z-o‘zini tekshirish</h2>
+    <div id="m-savollar"></div>
+    <p class="xabar ok" id="m-natija"></p>
+    <h2>Amaliyot topshirig‘i</h2>
+    <p id="m-topshiriq"></p>
+    <p class="small muted">Mashg‘ulot mahsuloti: <span id="m-mahsulot"></span></p>
+    <div class="amal">
+      <button class="asosiy" id="m-kundalik-tugma">Refleksiv kundalikni yozish</button>
+    </div>
+  </section>
+
+  <!-- kundalik -->
+  <section id="s-kund" hidden>
+    <p class="kicker" id="k-kicker"></p>
+    <h1>Refleksiv kundalik</h1>
+    <p class="muted small">Har bir bosqichga kamida bir-ikki jumla yozing. Matn shu qurilmada avtomatik saqlanadi.</p>
+    <div id="k-bosqichlar"></div>
+    <div class="panel" id="k-qiyos-panel" hidden>
+      <h3 style="margin-top:0">Vaziyat</h3>
+      <p id="k-qiyos-vaziyat"></p>
+      <textarea id="k-qiyos" aria-label="Vaziyatga javobingiz"></textarea>
+    </div>
+    <div id="k-qiyos-natija" hidden>
+      <h2>1-mashg‘ulotdagi va hozirgi javobingiz</h2>
+      <div class="qiyos">
+        <div><p class="small muted">1-mashg‘ulot</p><div class="ustun" id="k-q1"></div></div>
+        <div><p class="small muted">12-mashg‘ulot</p><div class="ustun" id="k-q12"></div></div>
+      </div>
+      <p class="small muted">Ikki javobni solishtiring: holat nomlanganmi, o‘quvchi ehtiyoji hisobga olinganmi, keyingi qadam aniqmi?</p>
+    </div>
+    <div class="amal">
+      <button class="asosiy" id="k-nusxa">Matnni nusxalash</button>
+      <button id="k-yukla">Fayl qilib yuklab olish</button>
+      <button id="k-tozala">Tozalash</button>
+    </div>
+    <p class="xabar ok" id="k-xabar"></p>
+  </section>
+
+  <footer class="oyoq">
+    <p>© 2026 Aminova Nasiba Davlatboy qizi. Materiallardan ta’lim maqsadida foydalanilganda muallif va manba ko‘rsatilishi so‘raladi.</p>
+  </footer>
+</main>
+
+<script src="mashgulotlar.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const xOl = k => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } };
+const xYoz = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const yarat = (teg, cls, matn) => { const e = document.createElement(teg); if (cls) e.className = cls; if (matn != null) e.textContent = matn; return e; };
+const HARF = ["A", "B", "C", "D"];
+let joriy = null;
+
+function korsat(bolim) {
+  ["s-royxat", "s-mash", "s-kund"].forEach(id => $(id).hidden = id !== bolim);
+  window.scrollTo(0, 0);
+}
+
+function royxatChiz() {
+  const r = $("royxat"); r.innerHTML = "";
+  [1, 2, 3].forEach(mn => {
+    r.appendChild(yarat("p", "modul-sarlavha", mn + "-modul. " + MODULLAR[mn].nom + ": " + MODULLAR[mn].izoh));
+    const k = yarat("div", "kartalar");
+    MASHGULOTLAR.filter(m => m.modul === mn).forEach(m => {
+      const a = yarat("a", "karta"); a.href = "#m" + m.n; a.style.textDecoration = "none";
+      const b = yarat("div", "k-bosh");
+      b.append(yarat("span", "k-n", m.n), yarat("span", "k-nom", m.nom));
+      a.append(b, yarat("div", "k-fan", m.tarkibiy));
+      const h = yarat("div", "k-holat");
+      const t = xOl("ochiq_test_" + m.n), kd = xOl("ochiq_kundalik_" + m.n);
+      h.append(yarat("span", "chip" + (t ? " bor" : ""), t ? "Savollar: " + t.togri + "/3" : "Savollar"));
+      h.append(yarat("span", "chip" + (kd && kd.vaqt ? " bor" : ""), "Kundalik"));
+      a.append(h); k.appendChild(a);
+    });
+    r.appendChild(k);
+  });
+}
+
+function mashChiz(n) {
+  const m = MASHGULOTLAR.find(x => x.n === n); if (!m) { location.hash = ""; return; }
+  joriy = m;
+  $("bar-nom").textContent = n + "-mashg‘ulot";
+  $("m-kicker").textContent = n + "-mashg‘ulot · " + m.modul + "-modul. " + MODULLAR[m.modul].nom;
+  $("m-nom").textContent = m.nom;
+  $("m-maqsad").textContent = m.maqsad;
+  $("m-tarkibiy").textContent = m.tarkibiy;
+  $("m-natijalar").innerHTML = ""; m.natijalar.forEach(x => $("m-natijalar").appendChild(yarat("li", "", x)));
+  $("m-oqish").innerHTML = ""; m.oqish.forEach(x => $("m-oqish").appendChild(yarat("p", "", x)));
+  $("m-topshiriq").textContent = m.topshiriq;
+  $("m-mahsulot").textContent = m.mahsulot;
+  const s = $("m-savollar"); s.innerHTML = ""; $("m-natija").textContent = "";
+  const javob = {};
+  m.savollar.forEach((q, i) => {
+    const d = yarat("div", "savol");
+    d.appendChild(yarat("div", "q", (i + 1) + ". " + q.q));
+    const v = yarat("div", "variantlar");
+    const iz = yarat("p", "izoh"); iz.hidden = true;
+    q.v.forEach((matn, j) => {
+      const b = yarat("button"); b.type = "button";
+      b.append(yarat("span", "harf", HARF[j]), yarat("span", "", matn));
+      b.onclick = () => {
+        if (javob[i] != null) return;
+        javob[i] = j;
+        [...v.children].forEach((c, ci) => { c.disabled = true; if (ci === q.t) c.classList.add("togri"); });
+        if (j !== q.t) b.classList.add("notogri");
+        iz.textContent = (j === q.t ? "To‘g‘ri. " : "To‘g‘ri javob: " + HARF[q.t] + ". ") + (q.izoh || "");
+        iz.hidden = false;
+        if (Object.keys(javob).length === m.savollar.length) {
+          const togri = m.savollar.filter((qq, k) => javob[k] === qq.t).length;
+          xYoz("ochiq_test_" + m.n, { togri, vaqt: Date.now() });
+          $("m-natija").textContent = "Natija: " + togri + " / " + m.savollar.length + ". Xato bo‘lgan savol bo‘yicha matnni qayta o‘qing.";
+        }
+      };
+      v.appendChild(b);
+    });
+    d.append(v, iz); s.appendChild(d);
+  });
+  korsat("s-mash");
+}
+
+function kundChiz(n) {
+  const m = MASHGULOTLAR.find(x => x.n === n); if (!m) { location.hash = ""; return; }
+  joriy = m;
+  $("bar-nom").textContent = n + "-mashg‘ulot · kundalik";
+  $("k-kicker").textContent = n + "-mashg‘ulot. " + m.nom;
+  const saq = xOl("ochiq_kundalik_" + n) || {};
+  const w = $("k-bosqichlar"); w.innerHTML = "";
+  KUNDALIK_BOSQICHLARI.forEach((b, i) => {
+    const d = yarat("div", "bosqich");
+    const nm = yarat("div", "b-nom"); nm.append(yarat("span", "b-n", (i + 1) + "."), yarat("span", "", b.nom));
+    const ta = yarat("textarea"); ta.id = "kb-" + b.id; ta.value = saq[b.id] || ""; ta.setAttribute("aria-label", b.nom);
+    ta.oninput = saqla;
+    d.append(nm, yarat("div", "b-savol", b.savol), ta); w.appendChild(d);
+  });
+  $("k-qiyos-panel").hidden = !m.qiyos;
+  $("k-qiyos-vaziyat").textContent = QIYOS_VAZIYAT;
+  $("k-qiyos").value = saq.qiyos || "";
+  $("k-qiyos").oninput = saqla;
+  qiyosYangila();
+  $("k-xabar").textContent = "";
+  korsat("s-kund");
+}
+
+function yigish() {
+  const j = {};
+  KUNDALIK_BOSQICHLARI.forEach(b => j[b.id] = $("kb-" + b.id).value.trim());
+  if (joriy.qiyos) j.qiyos = $("k-qiyos").value.trim();
+  return j;
+}
+function saqla() {
+  const j = yigish(); j.vaqt = Date.now();
+  xYoz("ochiq_kundalik_" + joriy.n, j);
+  qiyosYangila();
+}
+function qiyosYangila() {
+  const q1 = (xOl("ochiq_kundalik_1") || {}).qiyos, q12 = (xOl("ochiq_kundalik_12") || {}).qiyos;
+  const kor = joriy && joriy.n === 12 && q1 && q12;
+  $("k-qiyos-natija").hidden = !kor;
+  if (kor) { $("k-q1").textContent = q1; $("k-q12").textContent = q12; }
+}
+function matn() {
+  const j = yigish(), m = joriy;
+  let t = "Refleksiv kundalik\n" + m.n + "-mashg‘ulot. " + m.nom + "\nSana: " + new Date().toLocaleDateString("uz-UZ") + "\n\n";
+  KUNDALIK_BOSQICHLARI.forEach((b, i) => t += (i + 1) + ". " + b.nom + "\n" + (j[b.id] || "—") + "\n\n");
+  if (m.qiyos) t += "Vaziyatga javob\n" + (j.qiyos || "—") + "\n";
+  return t;
+}
+
+$("m-kundalik-tugma").onclick = () => location.hash = "k" + joriy.n;
+$("k-nusxa").onclick = async () => {
+  try { await navigator.clipboard.writeText(matn()); $("k-xabar").textContent = "Matn nusxalandi. Uni o‘qituvchiga yuborishingiz mumkin."; }
+  catch (e) { $("k-xabar").textContent = "Nusxalab bo‘lmadi. «Fayl qilib yuklab olish» tugmasidan foydalaning."; }
+};
+$("k-yukla").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([matn()], { type: "text/plain;charset=utf-8" }));
+  a.download = "kundalik-" + joriy.n + "-mashgulot.txt"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+$("k-tozala").onclick = () => {
+  KUNDALIK_BOSQICHLARI.forEach(b => $("kb-" + b.id).value = "");
+  $("k-qiyos").value = ""; saqla(); $("k-xabar").textContent = "Kundalik tozalandi.";
+};
+
+function yonalish() {
+  const h = location.hash;
+  let mm;
+  if ((mm = h.match(/^#m(\d+)$/))) { mashChiz(+mm[1]); $("bar-orqaga").href = "#"; $("bar-orqaga").textContent = "Ro‘yxat"; }
+  else if ((mm = h.match(/^#k(\d+)$/))) { kundChiz(+mm[1]); $("bar-orqaga").href = "#m" + mm[1]; $("bar-orqaga").textContent = "Mashg‘ulot"; }
+  else { joriy = null; royxatChiz(); korsat("s-royxat"); $("bar-nom").textContent = "Talaba materiallari"; $("bar-orqaga").href = "index.html"; $("bar-orqaga").textContent = "Bosh sahifa"; }
+}
+window.addEventListener("hashchange", yonalish);
+yonalish();
+</script>
+</body>
+</html>

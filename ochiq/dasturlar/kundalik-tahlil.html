@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Refleksiv kundalik matnlarini tahlil qilish dasturi</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --surface-2:#F4F2EC;
+    --ink:#1E2422; --muted:#67736E; --line:#E3DFD6; --line-2:#CFC9BC;
+    --accent:#2F6F5E; --accent-ink:#FFFFFF; --accent-soft:#E7EFEB;
+    --warn:#8A5A2B; --warn-soft:#F6EEE2;
+    --s1:#2F6F5E; --s2:#B4612A; --s3:#4A5FA8;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
+      --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
+      --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
+      --warn:#D7A76A; --warn-soft:#2A2319;
+      --s1:#79B9A6; --s2:#E0965F; --s3:#8FA2E6; color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.55}
+  [hidden]{display:none!important}
+  .wrap{max-width:980px; margin:0 auto; padding:0 16px 64px}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(24px,5vw,32px); line-height:1.2; margin:26px 0 6px}
+  h2{font-family:var(--serif); font-weight:600; font-size:21px; margin:28px 0 8px}
+  h3{font-size:15px; margin:16px 0 4px}
+  p{margin:0 0 10px; max-width:70ch}
+  .muted{color:var(--muted)} .small{font-size:14px}
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px; margin:14px 0}
+  .tablar{display:flex; gap:6px; flex-wrap:wrap; margin:18px 0 0}
+  .tablar button.faol{background:var(--accent-soft); border-color:var(--accent)}
+  button{font:inherit; cursor:pointer; border-radius:7px; border:1px solid var(--line-2); background:var(--surface); color:var(--ink); padding:9px 16px}
+  button.asosiy{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
+  button:focus-visible, select:focus-visible, textarea:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  select, textarea{font:inherit; padding:9px 11px; background:var(--bg); color:var(--ink); border:1px solid var(--line-2); border-radius:7px}
+  textarea{width:100%; min-height:140px}
+  .amal{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px}
+  .asboblar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:8px 0}
+  .asboblar label{font-size:13px; font-weight:600; color:var(--muted)}
+  table{border-collapse:collapse; width:100%; font-size:14px}
+  th,td{text-align:start; padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted)}
+  td:first-child{white-space:nowrap}
+  td.son, th.son{text-align:end; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .tbl{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+  .aniq{background:var(--accent-soft); border-bottom:2px solid var(--s1); border-radius:3px; padding:0 2px}
+  .noaniq{background:var(--warn-soft); border-bottom:2px solid var(--s2); border-radius:3px; padding:0 2px}
+  .bola{border-bottom:2px dotted var(--s3)}
+  .matn-kor{background:var(--surface-2); border-radius:8px; padding:12px 14px; white-space:pre-wrap; margin:6px 0 12px; font-size:15px}
+  .belgi-izoh{display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin:6px 0}
+  .kpi{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:12px 0}
+  @media (max-width:640px){ .kpi{grid-template-columns:repeat(2,1fr)} }
+  .kpi div{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 12px}
+  .kpi b{display:block; font-family:var(--mono); font-size:22px; font-weight:500}
+  .kpi span{font-size:12.5px; color:var(--muted)}
+  svg text{font-family:var(--sans); font-size:12px; fill:var(--muted)}
+  .xabar{color:var(--warn); font-size:14px; min-height:20px}
+  @media print{ button, .tablar, .asboblar, .yashir-chop{display:none!important} body{background:#fff; color:#000} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="small muted" style="margin-top:18px">Pedagogik tadqiqotlar uchun</p>
+  <h1>Refleksiv kundalik matnlarini tahlil qilish dasturi</h1>
+  <p class="muted">Bo‘lajak o‘qituvchilarning refleksiv kundaliklarida his-tuyg‘ularni qanchalik aniq nomlashini, o‘quvchi holatini tilga olishini va harakat rejasining aniqligini o‘lchaydi. Natijalarni mashg‘ulotlar bo‘yicha dinamikada ko‘rsatadi. Dastur internetsiz ishlaydi.</p>
+
+  <div class="tablar" id="tablar">
+    <button type="button" data-t="matn" class="faol">Bitta matnni tekshirish</button>
+    <button type="button" data-t="fayl">Kundaliklar faylini tahlil qilish</button>
+    <button type="button" data-t="lugat">Lug‘at</button>
+  </div>
+
+  <!-- BITTA MATN -->
+  <section id="t-matn">
+    <div class="panel">
+      <p class="small muted">Kundalik matnini yozing yoki qo‘ying. Dastur his-tuyg‘u so‘zlarini belgilaydi va matningizda holat qanchalik aniq nomlanganini ko‘rsatadi.</p>
+      <textarea id="m-matn" placeholder="Masalan: Bugun ikkinchi darsda xavotirlandim, chunki bola javob bermadi. U uyalgan bo‘lishi mumkin."></textarea>
+      <div class="amal"><button class="asosiy" id="m-tekshir" type="button">Tekshirish</button></div>
+    </div>
+    <div id="m-natija"></div>
+  </section>
+
+  <!-- FAYL -->
+  <section id="t-fayl" hidden>
+    <div class="panel yashir-chop">
+      <p class="small muted">Onlayn platformaning «Kundaliklar» eksport fayli (CSV). Ustunlar: kod, guruh, mashgulot va olti bosqich matni (tavsif, hissiyot, baholash, tahlil, xulosa, reja).</p>
+      <div class="amal" style="margin-top:4px">
+        <input type="file" id="fayl" accept=".csv,text/csv">
+        <button id="namuna" type="button">Namuna ma’lumot</button>
+      </div>
+      <p class="xabar" id="f-xabar"></p>
+    </div>
+    <div id="f-natija" hidden>
+      <div class="asboblar">
+        <label for="f-guruh">Guruh</label>
+        <select id="f-guruh"></select>
+        <label for="f-talaba">Talaba</label>
+        <select id="f-talaba"></select>
+        <button id="f-eksport" type="button">Ko‘rsatkichlarni CSV ga yuklash</button>
+        <button id="f-chop" type="button">Chop etish</button>
+      </div>
+      <div class="kpi" id="kpi"></div>
+      <h2>Mashg‘ulotlar bo‘yicha dinamika</h2>
+      <p class="small muted">Har bir nuqta shu mashg‘ulot kundaliklarining o‘rtacha ko‘rsatkichi.</p>
+      <div id="grafik"></div>
+      <div class="tbl" style="margin-top:12px"><table id="dinamika"></table></div>
+      <div id="talaba-blok" hidden>
+        <h2>Talaba kundaliklari</h2>
+        <div class="belgi-izoh"><span><span class="aniq">aniq so‘z</span></span><span><span class="noaniq">umumiy so‘z</span></span><span><span class="bola">o‘quvchi tilga olingan</span></span></div>
+        <div id="talaba-kundaliklar"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LUG'AT -->
+  <section id="t-lugat" hidden>
+    <p class="small muted" style="margin-top:14px">Dastur quyidagi so‘z o‘zaklarini qidiradi. So‘z o‘zak bilan boshlansa, uning barcha shakllari hisobga olinadi: «xavotir» o‘zagi «xavotirlandim», «xavotirda» so‘zlarini ham topadi.</p>
+    <div id="lugat"></div>
+  </section>
+</div>
+
+<script>
+/* =====================================================================
+   Refleksiv kundalik matnlarini tahlil qilish dasturi
+   Ko'rsatkichlar:
+     aniqlik      = aniq so'zlar / (aniq + umumiy so'zlar) * 100
+     oquvchi      = hissiyot yoki tahlil bosqichida o'quvchi holati
+                    tilga olinganmi (0/1)
+     reja         = harakat rejasining aniqligi (0, 1, 2)
+   ===================================================================== */
+var LUGAT = [
+  { guruh: "Xavotir va qo‘rquv", sozlar: [["tashvish", 1], ["hayajon", 1], ["xavotir", 2], ["cho'ch", 2], ["qo'rq", 3], ["vahima", 3]] },
+  { guruh: "Jahl", sozlar: [["norozi", 1], ["g'ash", 1], ["asabiy", 2], ["asablan", 2], ["jahl", 2], ["achchiqlan", 2], ["g'azab", 3], ["toqat", 3], ["sabrim", 3]] },
+  { guruh: "Qayg‘u", sozlar: [["afsus", 1], ["ma'yus", 1], ["achin", 1], ["xafa", 2], ["g'amgin", 2], ["tushkun", 3], ["umidsiz", 3]] },
+  { guruh: "Uyat va noqulaylik", sozlar: [["noqulay", 1], ["xijolat", 1], ["uyal", 2], ["sharmanda", 3]] },
+  { guruh: "Charchoq", sozlar: [["toliq", 2], ["holsiz", 2], ["holdan", 3]] },
+  { guruh: "Hayrat va sarosima", sozlar: [["hayron", 1], ["ajablan", 1], ["esankira", 2], ["sarosima", 2], ["dovdira", 2]] },
+  { guruh: "Quvonch va qoniqish", sozlar: [["mamnun", 1], ["qoniq", 1], ["xotirjam", 1], ["tinchlan", 1], ["xursand", 2], ["quvon", 2], ["zavq", 2], ["faxr", 2], ["g'urur", 2], ["ilhom", 2], ["baxtiyor", 3]] },
+  { guruh: "Qiziqish va ishonch", sozlar: [["qiziq", 1], ["ishonch", 1], ["minnatdor", 1], ["ruhlan", 2]] }
+];
+var UMUMIY = ["yaxshi", "yomon", "charchad", "zo'r", "qiyin", "og'ir", "normal", "yoqdi", "yoqmadi", "kayfiyat", "chiroyli", "ajoyib"];
+var BOLA = ["o'quvchi", "bola", "qizcha", "o'g'il", "sinfdosh", "o'quvchilar", "bolalar"];
+var BOSQICHLAR = [
+  ["tavsif", "Tavsif"], ["hissiyot", "His-tuyg‘ular"], ["baholash", "Baholash"],
+  ["tahlil", "Tahlil"], ["xulosa", "Xulosa"], ["reja", "Harakat rejasi"]
+];
+
+(function () {
+  "use strict";
+  function el(id) { return document.getElementById(id); }
+  function yarat(t, c, m) { var e = document.createElement(t); if (c) e.className = c; if (m !== undefined) e.textContent = m; return e; }
+  function tozala(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+
+  /* ------------------- matnni tahlil qilish ------------------- */
+  function normal(s) { return String(s || "").toLowerCase().replace(/[‘’ʻʼ`´]/g, "'"); }
+  var SOZ_RE = /[a-zа-яёўқғҳ'0-9-]+/gi;
+
+  function sozTuri(s) {
+    for (var g = 0; g < LUGAT.length; g++)
+      for (var k = 0; k < LUGAT[g].sozlar.length; k++)
+        if (s.indexOf(LUGAT[g].sozlar[k][0]) === 0) return { tur: "aniq", daraja: LUGAT[g].sozlar[k][1], guruh: LUGAT[g].guruh };
+    for (var u = 0; u < UMUMIY.length; u++) if (s.indexOf(UMUMIY[u]) === 0) return { tur: "noaniq" };
+    for (var b = 0; b < BOLA.length; b++) if (s.indexOf(BOLA[b]) === 0) return { tur: "bola" };
+    return null;
+  }
+
+  /* Bitta matn bo'lagi: so'zlar ro'yxati va topilmalar */
+  function bolakTahlil(matn) {
+    var n = normal(matn), r = { aniq: 0, noaniq: 0, sozlar: 0, darajalar: {}, guruhlar: {}, bolaGap: 0, belgilar: [] };
+    var gaplar = n.split(/[.!?;]+/);
+    gaplar.forEach(function (g) {
+      var bolaBor = false, hisBor = false;
+      (g.match(SOZ_RE) || []).forEach(function (s) {
+        var t = sozTuri(s);
+        if (!t) return;
+        if (t.tur === "bola") bolaBor = true;
+        if (t.tur === "aniq") hisBor = true;
+      });
+      if (bolaBor && hisBor) r.bolaGap++;
+    });
+    var m; SOZ_RE.lastIndex = 0;
+    while ((m = SOZ_RE.exec(n)) !== null) {
+      r.sozlar++;
+      var t = sozTuri(m[0]);
+      if (!t) continue;
+      if (t.tur === "aniq") { r.aniq++; r.darajalar[t.daraja] = 1; r.guruhlar[t.guruh] = 1; }
+      if (t.tur === "noaniq") r.noaniq++;
+      r.belgilar.push({ bosh: m.index, uzun: m[0].length, tur: t.tur });
+    }
+    return r;
+  }
+
+  function rejaBahosi(matn) {
+    var n = normal(matn), ball = 0;
+    if (/\d/.test(n) || /\b(bir|ikki|uch|to'rt|besh)\b/.test(n)) ball++;
+    if (/(marta|kamida|har\s|keyingi|ertaga|dushanba|seshanba|darsda|daqiqa)/.test(n)) ball++;
+    return ball;
+  }
+
+  function yozuvTahlil(j) {
+    var jami = { aniq: 0, noaniq: 0, sozlar: 0, darajalar: {}, guruhlar: {}, bolaGap: 0 };
+    BOSQICHLAR.forEach(function (b) {
+      var r = bolakTahlil(j[b[0]]);
+      jami.aniq += r.aniq; jami.noaniq += r.noaniq; jami.sozlar += r.sozlar;
+      Object.keys(r.darajalar).forEach(function (k) { jami.darajalar[k] = 1; });
+      Object.keys(r.guruhlar).forEach(function (k) { jami.guruhlar[k] = 1; });
+      if (b[0] === "hissiyot" || b[0] === "tahlil") jami.bolaGap += r.bolaGap;
+    });
+    return {
+      aniq: jami.aniq, noaniq: jami.noaniq, sozlar: jami.sozlar,
+      aniqlik: (jami.aniq + jami.noaniq) ? Math.round(jami.aniq / (jami.aniq + jami.noaniq) * 100) : null,
+      xilma: Object.keys(jami.guruhlar).length,
+      darajalar: Object.keys(jami.darajalar).length,
+      oquvchi: jami.bolaGap > 0 ? 1 : 0,
+      reja: rejaBahosi(j.reja)
+    };
+  }
+
+  function belgilanganMatn(matn) {
+    var n = normal(matn), r = bolakTahlil(matn), d = yarat("div", "matn-kor"), oxirgi = 0;
+    var asl = String(matn || "");
+    r.belgilar.forEach(function (b) {
+      if (b.bosh > oxirgi) d.appendChild(document.createTextNode(asl.slice(oxirgi, b.bosh)));
+      d.appendChild(yarat("span", b.tur, asl.slice(b.bosh, b.bosh + b.uzun)));
+      oxirgi = b.bosh + b.uzun;
+    });
+    if (oxirgi < asl.length) d.appendChild(document.createTextNode(asl.slice(oxirgi)));
+    if (!asl) d.appendChild(yarat("span", "muted", "(bo‘sh)"));
+    return d;
+  }
+
+  /* ------------------- bitta matn rejimi ------------------- */
+  el("m-tekshir").addEventListener("click", function () {
+    var matn = el("m-matn").value, uy = el("m-natija"); tozala(uy);
+    var r = bolakTahlil(matn), j = { hissiyot: matn, reja: matn };
+    var aniqlik = (r.aniq + r.noaniq) ? Math.round(r.aniq / (r.aniq + r.noaniq) * 100) : null;
+    var k = yarat("div", "kpi");
+    [[r.aniq, "aniq his-tuyg‘u so‘zi"], [r.noaniq, "umumiy so‘z"], [aniqlik === null ? "—" : aniqlik + "%", "aniqlik ko‘rsatkichi"], [r.bolaGap ? "bor" : "yo‘q", "o‘quvchi holati tilga olingan"]]
+      .forEach(function (x) { var d = yarat("div"); d.appendChild(yarat("b", "", x[0])); d.appendChild(yarat("span", "", x[1])); k.appendChild(d); });
+    uy.appendChild(k);
+    var iz = yarat("div", "belgi-izoh");
+    [["aniq", "aniq so‘z"], ["noaniq", "umumiy so‘z"], ["bola", "o‘quvchi tilga olingan"]].forEach(function (x) { var s = yarat("span"); s.appendChild(yarat("span", x[0], x[1])); iz.appendChild(s); });
+    uy.appendChild(iz);
+    uy.appendChild(belgilanganMatn(matn));
+    var mas = [];
+    if (r.noaniq > 0) mas.push("Umumiy so‘zlarni aniqroq so‘z bilan almashtiring: «yomon bo‘ldi» o‘rniga «xavotirlandim» yoki «xijolat bo‘ldim».");
+    if (r.aniq === 0) mas.push("Matnda holat nomlanmagan. O‘sha lahzada o‘zingizni qanday his qilganingizni bitta aniq so‘z bilan yozing.");
+    if (!r.bolaGap) mas.push("O‘quvchi o‘sha lahzada nimani his qilgan bo‘lishi mumkinligini ham yozing.");
+    if (!mas.length) mas.push("Holat aniq nomlangan va o‘quvchi nuqtai nazari ham bor.");
+    mas.forEach(function (m) { uy.appendChild(yarat("p", "small", m)); });
+  });
+
+  /* ------------------- CSV ------------------- */
+  function csvOqish(matn) {
+    matn = matn.replace(/^﻿/, "");
+    var bir = matn.split(/\r?\n/)[0] || "", ajr = (bir.split(";").length > bir.split(",").length) ? ";" : ",";
+    var qatorlar = [], qator = [], katak = "", q = false;
+    for (var i = 0; i < matn.length; i++) {
+      var c = matn[i];
+      if (q) { if (c === '"') { if (matn[i + 1] === '"') { katak += '"'; i++; } else q = false; } else katak += c; }
+      else if (c === '"') q = true;
+      else if (c === ajr) { qator.push(katak); katak = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && matn[i + 1] === "\n") i++;
+        qator.push(katak); katak = ""; if (qator.length > 1 || qator[0] !== "") qatorlar.push(qator); qator = [];
+      } else katak += c;
+    }
+    if (katak !== "" || qator.length) { qator.push(katak); qatorlar.push(qator); }
+    if (qatorlar.length < 2) return null;
+    var bosh = qatorlar[0].map(function (s) { return s.trim(); });
+    return qatorlar.slice(1).map(function (r) { var o = {}; bosh.forEach(function (b, k) { o[b] = r[k] || ""; }); return o; });
+  }
+
+  var YOZUVLAR = [];
+  function yuklandi(satrlar, manba) {
+    if (!satrlar || !satrlar.length || !("mashgulot" in satrlar[0]) || !("kod" in satrlar[0])) {
+      el("f-xabar").style.color = ""; el("f-xabar").textContent = "Fayl o‘qilmadi. Unda kamida kod, mashgulot va kundalik bosqichlari ustunlari bo‘lishi kerak."; return;
+    }
+    YOZUVLAR = satrlar.map(function (s) {
+      var m = parseInt(s.mashgulot, 10);
+      return { kod: s.kod, guruh: s.guruh || "", n: m, j: s, k: yozuvTahlil(s) };
+    }).filter(function (y) { return y.n >= 1 && y.n <= 12; });
+    el("f-xabar").textContent = manba + ": " + YOZUVLAR.length + " ta kundalik o‘qildi.";
+    el("f-xabar").style.color = "var(--accent)";
+    var gs = {}; YOZUVLAR.forEach(function (y) { gs[y.guruh] = 1; });
+    var s = el("f-guruh"); tozala(s);
+    [["", "hammasi"]].concat(Object.keys(gs).sort().map(function (g) { return [g, g]; })).forEach(function (x) {
+      var o = document.createElement("option"); o.value = x[0]; o.textContent = x[1]; s.appendChild(o);
+    });
+    talabalarniQoy();
+    el("f-natija").hidden = false;
+    chiz();
+  }
+  function talabalarniQoy() {
+    var g = el("f-guruh").value, k = {}, s = el("f-talaba"); tozala(s);
+    YOZUVLAR.forEach(function (y) { if (!g || y.guruh === g) k[y.kod] = 1; });
+    [["", "guruh bo‘yicha"]].concat(Object.keys(k).sort().map(function (x) { return [x, x]; })).forEach(function (x) {
+      var o = document.createElement("option"); o.value = x[0]; o.textContent = x[1]; s.appendChild(o);
+    });
+  }
+  el("f-guruh").addEventListener("change", function () { talabalarniQoy(); chiz(); });
+  el("f-talaba").addEventListener("change", chiz);
+
+  function tanlangan() {
+    var g = el("f-guruh").value, t = el("f-talaba").value;
+    return YOZUVLAR.filter(function (y) { return (!g || y.guruh === g) && (!t || y.kod === t); });
+  }
+  function ort(a) { var b = a.filter(function (x) { return x !== null && x !== undefined; }); return b.length ? b.reduce(function (p, q) { return p + q; }, 0) / b.length : null; }
+
+  function chiz() {
+    var y = tanlangan(), mash = [];
+    for (var n = 1; n <= 12; n++) {
+      var bu = y.filter(function (x) { return x.n === n; });
+      mash.push({ n: n, soni: bu.length,
+        aniqlik: ort(bu.map(function (x) { return x.k.aniqlik; })),
+        oquvchi: bu.length ? ort(bu.map(function (x) { return x.k.oquvchi * 100; })) : null,
+        reja: bu.length ? ort(bu.map(function (x) { return x.k.reja / 2 * 100; })) : null,
+        aniq: ort(bu.map(function (x) { return x.k.aniq; })), xilma: ort(bu.map(function (x) { return x.k.xilma; })) });
+    }
+    var kpi = el("kpi"); tozala(kpi);
+    var bor = mash.filter(function (m) { return m.soni; });
+    var birinchi = bor[0], oxirgi = bor[bor.length - 1];
+    function fmt(v) { return v === null || v === undefined ? "—" : Math.round(v) + "%"; }
+    [[String(y.length), "kundalik"], [birinchi ? fmt(birinchi.aniqlik) + " → " + fmt(oxirgi.aniqlik) : "—", "aniqlik: birinchi → oxirgi"],
+     [birinchi ? fmt(birinchi.oquvchi) + " → " + fmt(oxirgi.oquvchi) : "—", "o‘quvchi holati tilga olingan"],
+     [birinchi ? fmt(birinchi.reja) + " → " + fmt(oxirgi.reja) : "—", "reja aniqligi"]]
+      .forEach(function (x) { var d = yarat("div"); d.appendChild(yarat("b", "", x[0])); d.appendChild(yarat("span", "", x[1])); kpi.appendChild(d); });
+    grafik(mash);
+    var t = el("dinamika"); tozala(t);
+    var th = yarat("thead"), tr = yarat("tr");
+    ["Mashg‘ulot", "Kundalik", "Aniqlik, %", "O‘quvchi tilga olingan, %", "Reja aniqligi, %", "Aniq so‘zlar (o‘rt.)", "His-tuyg‘u guruhlari (o‘rt.)"]
+      .forEach(function (h, i) { tr.appendChild(yarat("th", i ? "son" : "", h)); });
+    th.appendChild(tr); t.appendChild(th);
+    var tb = yarat("tbody");
+    bor.forEach(function (m) {
+      var r = yarat("tr");
+      [m.n + "-mashg‘ulot", m.soni, fmt(m.aniqlik), fmt(m.oquvchi), fmt(m.reja),
+       m.aniq === null ? "—" : m.aniq.toFixed(1).replace(".", ","), m.xilma === null ? "—" : m.xilma.toFixed(1).replace(".", ",")]
+        .forEach(function (v, i) { r.appendChild(yarat("td", i ? "son" : "", String(v).replace(/%$/, ""))); });
+      tb.appendChild(r);
+    });
+    t.appendChild(tb);
+
+    var tk = el("f-talaba").value, tbk = el("talaba-blok"), uy = el("talaba-kundaliklar");
+    tbk.hidden = !tk; tozala(uy);
+    if (tk) {
+      y.slice().sort(function (a, b) { return a.n - b.n; }).forEach(function (z) {
+        uy.appendChild(yarat("h3", "", z.n + "-mashg‘ulot · aniqlik " + fmt(z.k.aniqlik) + " · o‘quvchi " + (z.k.oquvchi ? "tilga olingan" : "tilga olinmagan") + " · reja " + z.k.reja + "/2"));
+        ["hissiyot", "tahlil", "reja"].forEach(function (b) {
+          var nom = BOSQICHLAR.filter(function (x) { return x[0] === b; })[0][1];
+          uy.appendChild(yarat("p", "small muted", nom));
+          uy.appendChild(belgilanganMatn(z.j[b]));
+        });
+      });
+    }
+  }
+
+  function grafik(mash) {
+    var W = 900, H = 260, L = 40, R = 150, T = 14, B = 30, uy = el("grafik"); tozala(uy);
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("width", "100%");
+    svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Mashg‘ulotlar bo‘yicha ko‘rsatkichlar dinamikasi");
+    function x(n) { return L + (n - 1) / 11 * (W - L - R); }
+    function y(v) { return T + (1 - v / 100) * (H - T - B); }
+    function e(t, a) { var z = document.createElementNS(NS, t); Object.keys(a).forEach(function (k) { z.setAttribute(k, a[k]); }); svg.appendChild(z); return z; }
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      e("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "currentColor", "stroke-opacity": v ? 0.12 : 0.35 });
+      var t = e("text", { x: L - 6, y: y(v) + 4, "text-anchor": "end" }); t.textContent = v;
+    });
+    for (var n = 1; n <= 12; n++) { var tx = e("text", { x: x(n), y: H - 10, "text-anchor": "middle" }); tx.textContent = n; }
+    var seriyalar = [["aniqlik", "Aniqlik", "var(--s1)"], ["oquvchi", "O‘quvchi tilga olingan", "var(--s2)"], ["reja", "Reja aniqligi", "var(--s3)"]];
+    var yorliqY = [];
+    seriyalar.forEach(function (s) {
+      var nuq = mash.filter(function (m) { return m[s[0]] !== null; }).map(function (m) { return [x(m.n), y(m[s[0]])]; });
+      if (!nuq.length) return;
+      e("polyline", { points: nuq.map(function (p) { return p.join(","); }).join(" "), fill: "none", stroke: s[2], "stroke-width": 2.5, "stroke-linejoin": "round" });
+      nuq.forEach(function (p) { e("circle", { cx: p[0], cy: p[1], r: 3.5, fill: s[2] }); });
+      var ox = nuq[nuq.length - 1], ly = ox[1];
+      yorliqY.forEach(function (q) { if (Math.abs(q - ly) < 14) ly = q + 14; });
+      yorliqY.push(ly);
+      var t = e("text", { x: ox[0] + 8, y: ly + 4, fill: s[2] }); t.textContent = s[1]; t.style.fill = s[2];
+    });
+    uy.appendChild(svg);
+  }
+
+  el("f-eksport").addEventListener("click", function () {
+    var bosh = ["kod", "guruh", "mashgulot", "aniq_sozlar", "umumiy_sozlar", "aniqlik_foiz", "his_guruhlari", "darajalar", "oquvchi_tilga_olingan", "reja_aniqligi", "sozlar_soni"];
+    var s = [bosh.join(",")];
+    tanlangan().forEach(function (y) {
+      var k = y.k;
+      s.push([y.kod, y.guruh, y.n, k.aniq, k.noaniq, k.aniqlik === null ? "" : k.aniqlik, k.xilma, k.darajalar, k.oquvchi, k.reja, k.sozlar]
+        .map(function (v) { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(","));
+    });
+    var blob = new Blob(["﻿" + s.join("\n")], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "kundalik-korsatkichlari.csv";
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 300);
+  });
+  el("f-chop").addEventListener("click", function () { window.print(); });
+
+  el("fayl").addEventListener("change", function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var r = new FileReader(); r.onload = function () { yuklandi(csvOqish(String(r.result)), f.name); }; r.readAsText(f, "utf-8");
+  });
+  el("namuna").addEventListener("click", function () {
+    var namunalar = [
+      { his: "Yaxshi bo‘ldi, lekin biroz charchadim.", tah: "Dars qiyin o‘tdi.", reja: "Yaxshiroq tayyorlanaman." },
+      { his: "Xavotirlandim, bola javob bermadi.", tah: "Bola uyalgan bo‘lishi mumkin.", reja: "Keyingi darsda unga savolni oldindan aytaman." },
+      { his: "Xijolat bo‘ldim, chunki savolga javob topa olmadim. O‘quvchi esa hayron bo‘ldi.", tah: "Bola o‘qituvchi ham xato qilishini ko‘rib, qiziqib qoldi.", reja: "Seshanba kuni ikkala darsda kamida 2 marta meta-moment usulini qo‘llayman." }
+    ];
+    var s = "kod,guruh,mashgulot,tavsif,hissiyot,baholash,tahlil,xulosa,reja\n";
+    ["T-01", "T-02", "T-03", "T-04"].forEach(function (k, ki) {
+      for (var n = 1; n <= 6; n++) {
+        var d = namunalar[Math.min(2, Math.floor((n - 1 + ki % 2) / 2))];
+        s += [k, "401", n, "Darsda voqea bo‘ldi.", d.his, "Kutilganidek chiqmadi.", d.tah, "Xulosa qildim.", d.reja].map(function (v) { return '"' + v + '"'; }).join(",") + "\n";
+      }
+    });
+    yuklandi(csvOqish(s), "Namuna ma’lumot (shartli matnlar)");
+  });
+
+  /* ------------------- lug'at ------------------- */
+  (function () {
+    var uy = el("lugat");
+    var t = yarat("table"), th = yarat("thead"), tr = yarat("tr");
+    ["Guruh", "Kuchsiz", "O‘rta", "Kuchli"].forEach(function (h) { tr.appendChild(yarat("th", "", h)); });
+    th.appendChild(tr); t.appendChild(th);
+    var tb = yarat("tbody");
+    LUGAT.forEach(function (g) {
+      var r = yarat("tr"); r.appendChild(yarat("td", "", g.guruh));
+      [1, 2, 3].forEach(function (d) {
+        r.appendChild(yarat("td", "", g.sozlar.filter(function (s) { return s[1] === d; }).map(function (s) { return s[0].replace(/'/g, "‘"); }).join(", ") || "—"));
+      });
+      tb.appendChild(r);
+    });
+    var r2 = yarat("tr"); r2.appendChild(yarat("td", "", "Umumiy so‘zlar")); var td = yarat("td", "", UMUMIY.map(function (s) { return s.replace(/'/g, "‘"); }).join(", ")); td.colSpan = 3; r2.appendChild(td); tb.appendChild(r2);
+    t.appendChild(tb);
+    var w = yarat("div", "tbl"); w.appendChild(t); uy.appendChild(w);
+  })();
+
+  el("tablar").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    var t = b.getAttribute("data-t"), hamma = el("tablar").querySelectorAll("button");
+    for (var i = 0; i < hamma.length; i++) hamma[i].classList.toggle("faol", hamma[i] === b);
+    ["matn", "fayl", "lugat"].forEach(function (x) { el("t-" + x).hidden = x !== t; });
+  });
+
+  window.__kundalik = { bolakTahlil: bolakTahlil, yozuvTahlil: yozuvTahlil };
+})();
+</script>
+<p style="max-width:960px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid rgba(128,128,128,.35);font:13px/1.5 system-ui,sans-serif;opacity:.75"><a href="../index.html" style="color:inherit">Portal bosh sahifasi</a> · © 2026 Aminova Nasiba Davlatboy qizi. Ta’lim maqsadida foydalanilganda muallif va manba ko‘rsatilishi so‘raladi.</p>
+</body>
+</html>

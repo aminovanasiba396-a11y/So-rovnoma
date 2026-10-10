@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedagogik tajriba-sinov natijalarini statistik tahlil qilish dasturi</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --surface-2:#F4F2EC;
+    --ink:#1E2422; --muted:#67736E; --line:#E3DFD6; --line-2:#CFC9BC;
+    --accent:#2F6F5E; --accent-ink:#FFFFFF; --accent-soft:#E7EFEB;
+    --warn:#8A5A2B; --warn-soft:#F6EEE2;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
+      --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
+      --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
+      --warn:#D7A76A; --warn-soft:#2A2319; color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.55}
+  [hidden]{display:none!important}
+  .wrap{max-width:960px; margin:0 auto; padding:0 16px 64px}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(24px,5vw,32px); line-height:1.2; margin:28px 0 6px}
+  h2{font-family:var(--serif); font-weight:600; font-size:21px; margin:28px 0 8px}
+  h3{font-size:16px; margin:18px 0 6px}
+  p{margin:0 0 10px; max-width:70ch}
+  .muted{color:var(--muted)} .small{font-size:14px}
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px; margin:14px 0}
+  .note{background:var(--warn-soft); border-inline-start:3px solid var(--warn); padding:10px 14px; border-radius:0 6px 6px 0; margin:12px 0; font-size:14px}
+  label.fld{display:block; margin:0 0 12px}
+  label.fld > span{display:block; font-size:13px; font-weight:600; margin-bottom:4px}
+  select, input[type=text], textarea{width:100%; font:inherit; padding:9px 11px; background:var(--bg); color:var(--ink); border:1px solid var(--line-2); border-radius:7px}
+  textarea{min-height:110px; font-family:var(--mono); font-size:13px}
+  button{font:inherit; cursor:pointer; border-radius:7px; border:1px solid var(--line-2); background:var(--surface); color:var(--ink); padding:9px 16px}
+  button.asosiy{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .amal{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:640px){ .grid2{grid-template-columns:1fr} }
+  .tablar{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 0}
+  .tablar button.faol{background:var(--accent-soft); border-color:var(--accent)}
+  table{border-collapse:collapse; width:100%; font-size:14.5px}
+  th,td{text-align:start; padding:7px 8px; border-bottom:1px solid var(--line)}
+  th{font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted)}
+  td.son, th.son{text-align:end; font-family:var(--mono); font-variant-numeric:tabular-nums}
+  .tbl{overflow-x:auto}
+  .formula{font-family:var(--serif); font-size:17px; background:var(--surface-2); border-radius:8px; padding:10px 14px; margin:6px 0 10px; overflow-x:auto; white-space:nowrap}
+  .xulosa{background:var(--accent-soft); border-inline-start:3px solid var(--accent); padding:10px 14px; border-radius:0 6px 6px 0; margin:10px 0}
+  .natija{border-top:1px solid var(--line); padding-top:6px; margin-top:22px}
+  .xabar{color:var(--warn); font-size:14px; min-height:20px}
+  .kichik-yozuv{font-size:12.5px; color:var(--muted)}
+  @media print{ .yashir-chop, button, .tablar{display:none!important} body{background:#fff; color:#000} .panel{border:0; padding:0} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="small muted" style="margin-top:18px">Pedagogik tadqiqotlar uchun</p>
+  <h1>Pedagogik tajriba-sinov natijalarini statistik tahlil qilish dasturi</h1>
+  <p class="muted">Tajriba va nazorat guruhlari natijalarini Styudent t-mezoni, Mann–Uitni U-mezoni, Pirson χ² mezoni va Koen d ta’sir kuchi bilan solishtiradi. Har bir natija formula, qo‘yilgan qiymatlar va xulosa bilan beriladi. Dastur internetsiz ishlaydi, ma’lumot hech qayerga yuborilmaydi.</p>
+
+  <section class="panel yashir-chop">
+    <h2 style="margin-top:0">1. Ma’lumotni yuklash</h2>
+    <p class="small muted">CSV fayl (vergul yoki nuqtali vergul bilan ajratilgan, birinchi qator ustun nomlari). Onlayn platformaning «Tahlil uchun» eksport fayli to‘g‘ridan-to‘g‘ri ochiladi.</p>
+    <div class="amal" style="margin-top:4px">
+      <input type="file" id="fayl" accept=".csv,.txt,text/csv">
+      <button id="namuna" type="button">Namuna ma’lumot</button>
+    </div>
+    <details style="margin-top:10px"><summary class="small muted" style="cursor:pointer">Yoki matnni qo‘lda kiriting</summary>
+      <textarea id="matn" spellcheck="false" placeholder="turi,pre_ball,post_ball&#10;tajriba,12,18&#10;nazorat,11,13"></textarea>
+      <div class="amal"><button id="matn-ok" type="button">Matnni o‘qish</button></div>
+    </details>
+    <p class="xabar" id="yuk-xabar"></p>
+    <p class="small" id="yuk-holat"></p>
+  </section>
+
+  <section class="panel yashir-chop" id="sozlash" hidden>
+    <h2 style="margin-top:0">2. Tahlil turini tanlash</h2>
+    <div class="tablar" id="tablar">
+      <button type="button" data-t="mustaqil" class="faol">Ikki guruhni solishtirish</button>
+      <button type="button" data-t="bogliq">Oldin va keyin (bitta guruh)</button>
+      <button type="button" data-t="chi">Darajalar taqsimoti (χ²)</button>
+    </div>
+
+    <div id="t-mustaqil" style="margin-top:14px">
+      <div class="grid2">
+        <label class="fld"><span>Guruhlarni ajratuvchi ustun</span><select id="m-guruh"></select></label>
+        <label class="fld"><span>Taqqoslanadigan son ustuni</span><select id="m-qiymat"></select></label>
+        <label class="fld"><span>1-guruh (tajriba)</span><select id="m-g1"></select></label>
+        <label class="fld"><span>2-guruh (nazorat)</span><select id="m-g2"></select></label>
+      </div>
+    </div>
+
+    <div id="t-bogliq" style="margin-top:14px" hidden>
+      <div class="grid2">
+        <label class="fld"><span>Guruhlarni ajratuvchi ustun</span><select id="b-guruh"></select></label>
+        <label class="fld"><span>Guruh</span><select id="b-g"></select></label>
+        <label class="fld"><span>Oldingi o‘lchov ustuni</span><select id="b-oldin"></select></label>
+        <label class="fld"><span>Keyingi o‘lchov ustuni</span><select id="b-keyin"></select></label>
+      </div>
+    </div>
+
+    <div id="t-chi" style="margin-top:14px" hidden>
+      <div class="grid2">
+        <label class="fld"><span>Guruhlarni ajratuvchi ustun</span><select id="c-guruh"></select></label>
+        <label class="fld"><span>Daraja ustuni</span><select id="c-daraja"></select></label>
+      </div>
+      <p class="small muted">Masalan, «post_bilim_daraja» ustunida past, orta, yuqori qiymatlari bo‘lsa, ularning tajriba va nazorat guruhlarida taqsimlanishi solishtiriladi.</p>
+    </div>
+
+    <div class="grid2" style="margin-top:4px">
+      <label class="fld"><span>Ahamiyatlilik darajasi (α)</span>
+        <select id="alfa"><option value="0.05">0,05</option><option value="0.01">0,01</option></select></label>
+      <label class="fld"><span>O‘nli kasr belgisi</span>
+        <select id="kasr"><option value=",">vergul (0,05)</option><option value=".">nuqta (0.05)</option></select></label>
+    </div>
+    <div class="amal">
+      <button class="asosiy" id="hisobla" type="button">Hisoblash</button>
+      <span class="xabar" id="h-xabar"></span>
+    </div>
+  </section>
+
+  <section id="natijalar"></section>
+  <div class="amal yashir-chop" id="natija-amal" hidden>
+    <button id="chop" type="button">Chop etish yoki PDF</button>
+    <button id="tozala" type="button">Natijalarni tozalash</button>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   Pedagogik tajriba-sinov natijalarini statistik tahlil qilish dasturi
+   1. CSV o'qish   2. Statistik funksiyalar   3. Tahlillar   4. Interfeys
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  /* ------------------------- 1. CSV o'qish ------------------------- */
+  function csvOqish(matn) {
+    matn = matn.replace(/^﻿/, "");
+    var birinchi = matn.split(/\r?\n/)[0] || "";
+    var ajr = (birinchi.split(";").length > birinchi.split(",").length) ? ";" : ",";
+    var qatorlar = [], qator = [], katak = "", q = false;
+    for (var i = 0; i < matn.length; i++) {
+      var c = matn[i];
+      if (q) {
+        if (c === '"') { if (matn[i + 1] === '"') { katak += '"'; i++; } else q = false; }
+        else katak += c;
+      } else if (c === '"') q = true;
+      else if (c === ajr) { qator.push(katak); katak = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && matn[i + 1] === "\n") i++;
+        qator.push(katak); katak = "";
+        if (qator.length > 1 || qator[0] !== "") qatorlar.push(qator);
+        qator = [];
+      } else katak += c;
+    }
+    if (katak !== "" || qator.length) { qator.push(katak); qatorlar.push(qator); }
+    if (qatorlar.length < 2) return null;
+    var bosh = qatorlar[0].map(function (s) { return s.trim(); });
+    var satrlar = qatorlar.slice(1).map(function (r) {
+      var o = {}; bosh.forEach(function (b, k) { o[b] = (r[k] || "").trim(); }); return o;
+    });
+    return { ustunlar: bosh, satrlar: satrlar };
+  }
+
+  function son(v) {
+    if (v === null || v === undefined) return NaN;
+    var t = String(v).trim().replace(",", ".");
+    if (t === "" || !/^-?\d+(\.\d+)?$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+
+  /* --------------------- 2. Statistik funksiyalar --------------------- */
+  function yigindi(a) { var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s; }
+  function ortacha(a) { return yigindi(a) / a.length; }
+  function dispersiya(a) {
+    var m = ortacha(a), s = 0;
+    for (var i = 0; i < a.length; i++) s += (a[i] - m) * (a[i] - m);
+    return s / (a.length - 1);
+  }
+  function mediana(a) {
+    var b = a.slice().sort(function (x, y) { return x - y; }), n = b.length;
+    return n % 2 ? b[(n - 1) / 2] : (b[n / 2 - 1] + b[n / 2]) / 2;
+  }
+
+  /* Gamma funksiyasining logarifmi (Lanczos) */
+  function lnGamma(x) {
+    var g = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+             -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+    var y = x, t = x + 5.5;
+    t -= (x + 0.5) * Math.log(t);
+    var s = 1.000000000190015;
+    for (var j = 0; j < 6; j++) s += g[j] / ++y;
+    return -t + Math.log(2.5066282746310005 * s / x);
+  }
+  /* To'liqsiz beta funksiyasi (zanjirli kasr) */
+  function betaZanjir(a, b, x) {
+    var MAX = 300, EPS = 3e-14, FPMIN = 1e-300;
+    var qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - qab * x / qap;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    d = 1 / d; var h = d;
+    for (var m = 1; m <= MAX; m++) {
+      var m2 = 2 * m, aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+      d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+      c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+      d = 1 / d; h *= d * c;
+      aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+      d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+      c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+      d = 1 / d; var del = d * c; h *= del;
+      if (Math.abs(del - 1) < EPS) break;
+    }
+    return h;
+  }
+  function betaI(a, b, x) {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    var bt = Math.exp(lnGamma(a + b) - lnGamma(a) - lnGamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+    return x < (a + 1) / (a + b + 2) ? bt * betaZanjir(a, b, x) / a : 1 - bt * betaZanjir(b, a, 1 - x) / b;
+  }
+  /* Styudent taqsimoti: ikki tomonlama p */
+  function tP(t, df) { return betaI(df / 2, 0.5, df / (df + t * t)); }
+
+  /* To'liqsiz gamma funksiyasi Q(a, x) */
+  function gammaQ(a, x) {
+    if (x <= 0) return 1;
+    var gln = lnGamma(a);
+    if (x < a + 1) {
+      var ap = a, del = 1 / a, sum = del;
+      for (var n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 3e-14) break; }
+      return 1 - sum * Math.exp(-x + a * Math.log(x) - gln);
+    }
+    var b = x + 1 - a, c = 1 / 1e-300, d = 1 / b, h = d;
+    for (var i = 1; i < 500; i++) {
+      var an = -i * (i - a); b += 2;
+      d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d; var dl = d * c; h *= dl;
+      if (Math.abs(dl - 1) < 3e-14) break;
+    }
+    return Math.exp(-x + a * Math.log(x) - gln) * h;
+  }
+  function chiP(chi, df) { return gammaQ(df / 2, chi / 2); }
+  /* Standart normal taqsimot: ikki tomonlama p */
+  function zP(z) { z = Math.abs(z); return gammaQ(0.5, z * z / 2); }
+
+  function mustaqilT(a, b) {
+    var n1 = a.length, n2 = b.length, m1 = ortacha(a), m2 = ortacha(b), s1 = dispersiya(a), s2 = dispersiya(b);
+    var df = n1 + n2 - 2, sp2 = ((n1 - 1) * s1 + (n2 - 1) * s2) / df;
+    var se = Math.sqrt(sp2 * (1 / n1 + 1 / n2)), t = (m1 - m2) / se;
+    return { n1: n1, n2: n2, m1: m1, m2: m2, s1: Math.sqrt(s1), s2: Math.sqrt(s2), sp2: sp2, sp: Math.sqrt(sp2), se: se, t: t, df: df, p: tP(t, df), d: (m1 - m2) / Math.sqrt(sp2) };
+  }
+  function bogliqT(x, y) {
+    var d = x.map(function (v, i) { return y[i] - v; }), n = d.length;
+    var md = ortacha(d), sd = Math.sqrt(dispersiya(d)), t = md / (sd / Math.sqrt(n));
+    return { n: n, mx: ortacha(x), my: ortacha(y), sx: Math.sqrt(dispersiya(x)), sy: Math.sqrt(dispersiya(y)), md: md, sd: sd, t: t, df: n - 1, p: tP(t, n - 1), dz: md / sd };
+  }
+  function mannUitni(a, b) {
+    var n1 = a.length, n2 = b.length, N = n1 + n2;
+    var hamma = a.map(function (v) { return { v: v, g: 1 }; }).concat(b.map(function (v) { return { v: v, g: 2 }; }));
+    hamma.sort(function (x, y) { return x.v - y.v; });
+    var tuzatish = 0, i = 0;
+    while (i < N) {
+      var j = i; while (j + 1 < N && hamma[j + 1].v === hamma[i].v) j++;
+      var r = (i + j) / 2 + 1, t = j - i + 1;
+      for (var k = i; k <= j; k++) hamma[k].r = r;
+      if (t > 1) tuzatish += t * t * t - t;
+      i = j + 1;
+    }
+    var R1 = 0, R2 = 0;
+    hamma.forEach(function (h) { if (h.g === 1) R1 += h.r; else R2 += h.r; });
+    var U1 = n1 * n2 + n1 * (n1 + 1) / 2 - R1, U2 = n1 * n2 - U1, U = Math.min(U1, U2);
+    var mU = n1 * n2 / 2, sU = Math.sqrt(n1 * n2 / 12 * ((N + 1) - tuzatish / (N * (N - 1))));
+    var z = sU > 0 ? (Math.abs(U - mU) - 0.5) / sU : 0;
+    if (z < 0) z = 0;
+    return { n1: n1, n2: n2, R1: R1, R2: R2, U1: U1, U2: U2, U: U, mU: mU, sU: sU, z: z, p: zP(z), tuzatish: tuzatish };
+  }
+  function pirsonChi(jadval) {
+    var r = jadval.length, c = jadval[0].length, N = 0, qq = [], uu = [];
+    for (var i = 0; i < r; i++) { qq[i] = 0; for (var j = 0; j < c; j++) { qq[i] += jadval[i][j]; N += jadval[i][j]; } }
+    for (j = 0; j < c; j++) { uu[j] = 0; for (i = 0; i < r; i++) uu[j] += jadval[i][j]; }
+    var chi = 0, kutilgan = [], kichikE = 0;
+    for (i = 0; i < r; i++) {
+      kutilgan[i] = [];
+      for (j = 0; j < c; j++) {
+        var E = qq[i] * uu[j] / N; kutilgan[i][j] = E;
+        if (E < 5) kichikE++;
+        if (E > 0) chi += (jadval[i][j] - E) * (jadval[i][j] - E) / E;
+      }
+    }
+    var df = (r - 1) * (c - 1);
+    return { chi: chi, df: df, p: chiP(chi, df), N: N, qator: qq, ustun: uu, kutilgan: kutilgan, kichikE: kichikE,
+             V: Math.sqrt(chi / (N * (Math.min(r, c) - 1))) };
+  }
+
+  /* ------------------------- formatlash ------------------------- */
+  function f(x, k) {
+    if (x === null || x === undefined || isNaN(x)) return "—";
+    var s = (k === undefined ? 2 : k);
+    return x.toFixed(s).replace(".", el("kasr").value);
+  }
+  function fp(p) {
+    if (p < 0.001) return "p < " + f(0.001, 3);
+    return "p = " + f(p, 3);
+  }
+  function dTalqin(d) {
+    var a = Math.abs(d);
+    if (a < 0.2) return "juda kichik";
+    if (a < 0.5) return "kichik";
+    if (a < 0.8) return "o‘rta";
+    return "katta";
+  }
+  function VTalqin(v) {
+    if (v < 0.1) return "juda kuchsiz";
+    if (v < 0.3) return "kuchsiz";
+    if (v < 0.5) return "o‘rtacha";
+    return "kuchli";
+  }
+
+  /* ------------------------- 4. Interfeys ------------------------- */
+  function el(id) { return document.getElementById(id); }
+  function yarat(t, c, m) { var e = document.createElement(t); if (c) e.className = c; if (m !== undefined) e.textContent = m; return e; }
+  var DATA = null, TUR = "mustaqil";
+
+  function yuklandi(d, manba) {
+    if (!d) { el("yuk-xabar").textContent = "Ma’lumot o‘qilmadi. Birinchi qatorda ustun nomlari, keyingi qatorlarda qiymatlar bo‘lishi kerak."; return; }
+    DATA = d;
+    el("yuk-xabar").textContent = "";
+    el("yuk-holat").textContent = manba + ": " + d.satrlar.length + " ta qator, " + d.ustunlar.length + " ta ustun.";
+    tanlovlarniTold();
+    el("sozlash").hidden = false;
+  }
+
+  function ustunQiymatlari(ustun) {
+    var bor = {};
+    DATA.satrlar.forEach(function (r) { var v = r[ustun]; if (v !== "") bor[v] = (bor[v] || 0) + 1; });
+    return Object.keys(bor).sort();
+  }
+  function sonUstunmi(ustun) {
+    var s = 0, n = 0;
+    DATA.satrlar.forEach(function (r) { if (r[ustun] !== "") { n++; if (!isNaN(son(r[ustun]))) s++; } });
+    return n > 0 && s / n > 0.8;
+  }
+  function selectTold(sel, qiymatlar, tanlangan) {
+    while (sel.firstChild) sel.removeChild(sel.firstChild);
+    qiymatlar.forEach(function (v) { var o = document.createElement("option"); o.value = v; o.textContent = v; sel.appendChild(o); });
+    if (tanlangan && qiymatlar.indexOf(tanlangan) >= 0) sel.value = tanlangan;
+  }
+
+  function tanlovlarniTold() {
+    var u = DATA.ustunlar;
+    var sonlar = u.filter(sonUstunmi), matnlar = u.filter(function (x) { return !sonUstunmi(x); });
+    var guruhUst = u.indexOf("turi") >= 0 ? "turi" : (matnlar[0] || u[0]);
+    ["m-guruh", "b-guruh", "c-guruh"].forEach(function (id) { selectTold(el(id), matnlar.length ? matnlar : u, guruhUst); });
+    selectTold(el("m-qiymat"), sonlar, sonlar.filter(function (x) { return /post_.*_ball/.test(x); })[0]);
+    selectTold(el("b-oldin"), sonlar, sonlar.filter(function (x) { return /^pre_.*_ball/.test(x); })[0]);
+    selectTold(el("b-keyin"), sonlar, sonlar.filter(function (x) { return /^post_.*_ball/.test(x); })[0]);
+    selectTold(el("c-daraja"), matnlar, matnlar.filter(function (x) { return /post_.*_daraja/.test(x); })[0]);
+    guruhQiymatlari();
+  }
+  function guruhQiymatlari() {
+    var mv = ustunQiymatlari(el("m-guruh").value);
+    selectTold(el("m-g1"), mv, mv.indexOf("tajriba") >= 0 ? "tajriba" : mv[0]);
+    selectTold(el("m-g2"), mv, mv.indexOf("nazorat") >= 0 ? "nazorat" : mv[1]);
+    var bv = ustunQiymatlari(el("b-guruh").value);
+    selectTold(el("b-g"), ["(hammasi)"].concat(bv), bv.indexOf("tajriba") >= 0 ? "tajriba" : "(hammasi)");
+  }
+  ["m-guruh", "b-guruh"].forEach(function (id) { el(id).addEventListener("change", guruhQiymatlari); });
+
+  el("tablar").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    TUR = b.getAttribute("data-t");
+    var hamma = el("tablar").querySelectorAll("button");
+    for (var i = 0; i < hamma.length; i++) hamma[i].classList.toggle("faol", hamma[i] === b);
+    ["mustaqil", "bogliq", "chi"].forEach(function (t) { el("t-" + t).hidden = t !== TUR; });
+    el("h-xabar").textContent = "";
+  });
+
+  el("fayl").addEventListener("change", function () {
+    var fl = this.files && this.files[0]; if (!fl) return;
+    var r = new FileReader();
+    r.onload = function () { yuklandi(csvOqish(String(r.result)), fl.name); };
+    r.readAsText(fl, "utf-8");
+  });
+  el("matn-ok").addEventListener("click", function () { yuklandi(csvOqish(el("matn").value), "Qo‘lda kiritilgan matn"); });
+  el("namuna").addEventListener("click", function () {
+    var s = "kod,turi,pre_bilim_ball,post_bilim_ball,post_bilim_daraja\n";
+    var tj = [[4,7],[3,6],[5,7],[4,8],[2,5],[5,8],[3,6],[4,7],[3,5],[5,7],[4,6],[2,6]];
+    var nz = [[4,4],[3,4],[5,5],[3,3],[2,3],[4,5],[5,5],[3,4],[4,4],[2,3],[3,4],[4,5]];
+    function d(x) { var f = x / 8 * 100; return f <= 33 ? "past" : (f <= 66 ? "orta" : "yuqori"); }
+    tj.forEach(function (r, i) { s += "T" + (i + 1) + ",tajriba," + r[0] + "," + r[1] + "," + d(r[1]) + "\n"; });
+    nz.forEach(function (r, i) { s += "N" + (i + 1) + ",nazorat," + r[0] + "," + r[1] + "," + d(r[1]) + "\n"; });
+    yuklandi(csvOqish(s), "Namuna ma’lumot (shartli raqamlar)");
+  });
+
+  function sonlarOl(guruhUst, guruhQ, ustun) {
+    var a = [];
+    DATA.satrlar.forEach(function (r) {
+      if (guruhQ !== null && r[guruhUst] !== guruhQ) return;
+      var v = son(r[ustun]); if (!isNaN(v)) a.push(v);
+    });
+    return a;
+  }
+
+  function blok(sarlavha) {
+    var d = yarat("div", "natija");
+    d.appendChild(yarat("h2", "", sarlavha));
+    el("natijalar").appendChild(d);
+    el("natija-amal").hidden = false;
+    return d;
+  }
+  function jadval(uy, bosh, qatorlar, sonUst) {
+    var w = yarat("div", "tbl"), t = yarat("table"), th = yarat("thead"), tr = yarat("tr");
+    bosh.forEach(function (b, i) { var x = yarat("th", sonUst && i > 0 ? "son" : "", b); tr.appendChild(x); });
+    th.appendChild(tr); t.appendChild(th);
+    var tb = yarat("tbody");
+    qatorlar.forEach(function (q) {
+      var r = yarat("tr");
+      q.forEach(function (v, i) { r.appendChild(yarat("td", sonUst && i > 0 ? "son" : "", v)); });
+      tb.appendChild(r);
+    });
+    t.appendChild(tb); w.appendChild(t); uy.appendChild(w);
+  }
+  function formula(uy, matn) { uy.appendChild(yarat("div", "formula", matn)); }
+  function matnQosh(uy, cls, m) { uy.appendChild(yarat("p", cls, m)); }
+  function xulosa(uy, m) { uy.appendChild(yarat("div", "xulosa", m)); }
+
+  function mustaqilHisob() {
+    var gu = el("m-guruh").value, ust = el("m-qiymat").value, g1 = el("m-g1").value, g2 = el("m-g2").value;
+    if (g1 === g2) { el("h-xabar").textContent = "Ikki xil guruhni tanlang."; return; }
+    var a = sonlarOl(gu, g1, ust), b = sonlarOl(gu, g2, ust);
+    if (a.length < 2 || b.length < 2) { el("h-xabar").textContent = "Har bir guruhda kamida 2 ta son qiymat bo‘lishi kerak."; return; }
+    var alfa = parseFloat(el("alfa").value), t = mustaqilT(a, b), u = mannUitni(a, b);
+    var uy = blok("Ikki mustaqil guruhni solishtirish: " + ust);
+
+    jadval(uy, ["Ko‘rsatkich", g1, g2], [
+      ["Tanlanma hajmi, n", String(t.n1), String(t.n2)],
+      ["O‘rtacha qiymat, x̄", f(t.m1), f(t.m2)],
+      ["Standart og‘ish, s", f(t.s1), f(t.s2)],
+      ["Mediana", f(mediana(a)), f(mediana(b))]
+    ], true);
+
+    uy.appendChild(yarat("h3", "", "Styudent t-mezoni (mustaqil tanlanmalar)"));
+    formula(uy, "t = (x̄₁ − x̄₂) / √( s²ₚ · (1/n₁ + 1/n₂) ),   s²ₚ = ((n₁ − 1)s₁² + (n₂ − 1)s₂²) / (n₁ + n₂ − 2)");
+    formula(uy, "s²ₚ = ((" + t.n1 + " − 1)·" + f(t.s1) + "² + (" + t.n2 + " − 1)·" + f(t.s2) + "²) / (" + t.n1 + " + " + t.n2 + " − 2) = " + f(t.sp2, 3));
+    formula(uy, "t = (" + f(t.m1) + " − " + f(t.m2) + ") / √( " + f(t.sp2, 3) + " · (1/" + t.n1 + " + 1/" + t.n2 + ") ) = " + f(t.t, 3) + ",   df = " + t.df + ",   " + fp(t.p));
+
+    uy.appendChild(yarat("h3", "", "Mann–Uitni U-mezoni"));
+    formula(uy, "U₁ = n₁n₂ + n₁(n₁ + 1)/2 − R₁,   U = min(U₁, U₂),   z = (|U − n₁n₂/2| − 0,5) / σᵤ");
+    formula(uy, "U₁ = " + t.n1 + "·" + t.n2 + " + " + t.n1 + "·(" + t.n1 + " + 1)/2 − " + f(u.R1, 1) + " = " + f(u.U1, 1) + ",   U₂ = " + f(u.U2, 1) + ",   U = " + f(u.U, 1));
+    formula(uy, "σᵤ = √( n₁n₂/12 · ((N + 1) − Σ(t³ − t) / (N(N − 1))) ) = " + f(u.sU, 3) + ",   z = " + f(u.z, 3) + ",   " + fp(u.p));
+    matnQosh(uy, "kichik-yozuv", "R₁ va R₂ — guruhlar ranglarining yig‘indisi (R₁ = " + f(u.R1, 1) + ", R₂ = " + f(u.R2, 1) + "). Bir xil qiymatlar uchun o‘rtacha rang berilgan va σᵤ tuzatilgan. z uzluksizlik tuzatishi bilan hisoblangan.");
+
+    uy.appendChild(yarat("h3", "", "Koen d ta’sir kuchi"));
+    formula(uy, "d = (x̄₁ − x̄₂) / sₚ = (" + f(t.m1) + " − " + f(t.m2) + ") / " + f(t.sp, 3) + " = " + f(t.d));
+
+    var ahamiyatli = t.p < alfa, uAh = u.p < alfa;
+    var al = f(alfa, 2);
+    var x = "Styudent t-mezoni bo‘yicha " + g1 + " va " + g2 + " guruhlarining o‘rtacha qiymatlari o‘rtasidagi farq " +
+      (ahamiyatli ? "statistik ahamiyatli (t = " + f(t.t, 2) + ", df = " + t.df + ", " + fp(t.p) + (t.p < 0.001 ? "" : " < " + al) + ")." :
+                    "statistik ahamiyatli emas (t = " + f(t.t, 2) + ", df = " + t.df + ", " + fp(t.p) + " ≥ " + al + ").") +
+      " Mann–Uitni U-mezoni " + (uAh === ahamiyatli ? "ham shu xulosani beradi" : "boshqa xulosa beradi") +
+      " (U = " + f(u.U, 1) + ", " + fp(u.p) + "). Koen d = " + f(t.d) + ", ta’sir kuchi " + dTalqin(t.d) + ".";
+    xulosa(uy, x);
+    if (Math.min(t.n1, t.n2) < 30) matnQosh(uy, "kichik-yozuv", "Guruhlardan birida tanlanma 30 tadan kam. Bunday holda Mann–Uitni U-mezoni natijasi ishonchliroq tayanch hisoblanadi.");
+    return true;
+  }
+
+  function bogliqHisob() {
+    var gu = el("b-guruh").value, g = el("b-g").value, o = el("b-oldin").value, k = el("b-keyin").value;
+    if (o === k) { el("h-xabar").textContent = "Oldingi va keyingi o‘lchov uchun turli ustunlarni tanlang."; return; }
+    var x = [], y = [];
+    DATA.satrlar.forEach(function (r) {
+      if (g !== "(hammasi)" && r[gu] !== g) return;
+      var a = son(r[o]), b = son(r[k]);
+      if (!isNaN(a) && !isNaN(b)) { x.push(a); y.push(b); }
+    });
+    if (x.length < 3) { el("h-xabar").textContent = "Ikkala o‘lchovi bor kamida 3 ta qator kerak."; return; }
+    var alfa = parseFloat(el("alfa").value), t = bogliqT(x, y);
+    var uy = blok("Oldin va keyin: " + o + " → " + k + (g !== "(hammasi)" ? " (" + g + ")" : ""));
+    jadval(uy, ["Ko‘rsatkich", o, k], [
+      ["Tanlanma hajmi, n", String(t.n), String(t.n)],
+      ["O‘rtacha qiymat, x̄", f(t.mx), f(t.my)],
+      ["Standart og‘ish, s", f(t.sx), f(t.sy)]
+    ], true);
+    uy.appendChild(yarat("h3", "", "Styudent t-mezoni (bog‘liq tanlanmalar)"));
+    formula(uy, "t = d̄ / (s_d / √n),   d̄ — farqlarning o‘rtachasi,   s_d — farqlarning standart og‘ishi");
+    formula(uy, "t = " + f(t.md, 3) + " / (" + f(t.sd, 3) + " / √" + t.n + ") = " + f(t.t, 3) + ",   df = " + t.df + ",   " + fp(t.p));
+    uy.appendChild(yarat("h3", "", "Koen d ta’sir kuchi (bog‘liq tanlanmalar)"));
+    formula(uy, "d_z = d̄ / s_d = " + f(t.md, 3) + " / " + f(t.sd, 3) + " = " + f(t.dz));
+    var ah = t.p < alfa;
+    xulosa(uy, "Ikki o‘lchov o‘rtasidagi o‘zgarish " + (ah ? "statistik ahamiyatli" : "statistik ahamiyatli emas") +
+      " (t = " + f(t.t, 2) + ", df = " + t.df + ", " + fp(t.p) + "). O‘rtacha qiymat " + f(t.mx) + " dan " + f(t.my) +
+      " ga o‘zgargan, ta’sir kuchi d_z = " + f(t.dz) + " (" + dTalqin(t.dz) + ").");
+    return true;
+  }
+
+  function chiHisob() {
+    var gu = el("c-guruh").value, du = el("c-daraja").value;
+    if (gu === du) { el("h-xabar").textContent = "Guruh va daraja uchun turli ustunlarni tanlang."; return; }
+    var guruhlar = ustunQiymatlari(gu), darajalar = ustunQiymatlari(du);
+    var TARTIB = ["past", "orta", "o‘rta", "yuqori"];
+    darajalar.sort(function (a, b) {
+      var ia = TARTIB.indexOf(a), ib = TARTIB.indexOf(b);
+      if (ia >= 0 && ib >= 0) return ia - ib; if (ia >= 0) return -1; if (ib >= 0) return 1; return a < b ? -1 : 1;
+    });
+    if (guruhlar.length < 2 || darajalar.length < 2) { el("h-xabar").textContent = "Kamida 2 ta guruh va 2 ta daraja bo‘lishi kerak."; return; }
+    var j = guruhlar.map(function (g) {
+      return darajalar.map(function (d) {
+        return DATA.satrlar.filter(function (r) { return r[gu] === g && r[du] === d; }).length;
+      });
+    });
+    var bosQator = j.map(function (q) { return yigindi(q); });
+    var gIdx = [], jj = [];
+    j.forEach(function (q, i) { if (bosQator[i] > 0) { gIdx.push(guruhlar[i]); jj.push(q); } });
+    var alfa = parseFloat(el("alfa").value), c = pirsonChi(jj);
+    var uy = blok("Darajalar taqsimoti: " + du);
+    jadval(uy, ["Guruh"].concat(darajalar).concat(["Jami"]),
+      jj.map(function (q, i) {
+        return [gIdx[i]].concat(q.map(function (v) { return v + " (" + f(v / c.qator[i] * 100, 1) + "%)"; })).concat([String(c.qator[i])]);
+      }), true);
+    uy.appendChild(yarat("h3", "", "Pirson χ² mezoni"));
+    formula(uy, "χ² = Σ (O − E)² / E,   E = (qator jami × ustun jami) / N,   df = (r − 1)(c − 1)");
+    var qism = [];
+    jj.forEach(function (q, i) { q.forEach(function (o, k) { if (c.kutilgan[i][k] > 0) qism.push("(" + o + " − " + f(c.kutilgan[i][k]) + ")²/" + f(c.kutilgan[i][k])); }); });
+    formula(uy, "χ² = " + qism.join(" + ") + " = " + f(c.chi, 3));
+    formula(uy, "df = (" + jj.length + " − 1)(" + darajalar.length + " − 1) = " + c.df + ",   " + fp(c.p) + ",   Kramer V = √(χ² / (N·(min(r, c) − 1))) = " + f(c.V, 3));
+    var ah = c.p < alfa;
+    xulosa(uy, "Guruhlar bo‘yicha darajalar taqsimotidagi farq " + (ah ? "statistik ahamiyatli" : "statistik ahamiyatli emas") +
+      " (χ² = " + f(c.chi, 2) + ", df = " + c.df + ", " + fp(c.p) + "). Bog‘liqlik kuchi Kramer V = " + f(c.V, 2) + " (" + VTalqin(c.V) + ").");
+    if (c.kichikE > 0) matnQosh(uy, "kichik-yozuv", c.kichikE + " ta katakda kutilgan chastota 5 dan kichik. Bunday holda χ² natijasini ehtiyotkorlik bilan izohlash yoki darajalarni birlashtirish tavsiya etiladi.");
+    return true;
+  }
+
+  el("hisobla").addEventListener("click", function () {
+    el("h-xabar").textContent = "";
+    var ok = TUR === "mustaqil" ? mustaqilHisob() : (TUR === "bogliq" ? bogliqHisob() : chiHisob());
+    if (ok) el("natijalar").lastChild.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  el("chop").addEventListener("click", function () { window.print(); });
+  el("tozala").addEventListener("click", function () {
+    var n = el("natijalar"); while (n.firstChild) n.removeChild(n.firstChild);
+    el("natija-amal").hidden = true;
+  });
+
+  /* Sinov uchun tashqi kirish (dastur ishiga ta'sir qilmaydi) */
+  window.__stat = { mustaqilT: mustaqilT, bogliqT: bogliqT, mannUitni: mannUitni, pirsonChi: pirsonChi, tP: tP, chiP: chiP, zP: zP };
+})();
+</script>
+<p style="max-width:960px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid rgba(128,128,128,.35);font:13px/1.5 system-ui,sans-serif;opacity:.75"><a href="../index.html" style="color:inherit">Portal bosh sahifasi</a> · © 2026 Aminova Nasiba Davlatboy qizi. Ta’lim maqsadida foydalanilganda muallif va manba ko‘rsatilishi so‘raladi.</p>
+</body>
+</html>

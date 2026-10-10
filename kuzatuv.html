@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kuzatuv varaqasi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="uslub.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- KIRISH -->
+  <section id="e-kirish">
+    <p class="kicker">Kuzatuvchi uchun</p>
+    <h1>Kuzatuv varaqasi</h1>
+    <p class="muted">Bo‘lajak boshlang‘ich sinf o‘qituvchisining amaliyot kunlaridagi emotsional xatti-harakati</p>
+    <div class="panel">
+      <label class="fld" style="margin-bottom:0">
+        <span>Kuzatuvchi kodi</span>
+        <input type="text" class="mono" id="kkod" placeholder="Masalan, K-3F9A2" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="amal" style="margin-top:14px">
+        <button class="asosiy" id="kirish" type="button">Kirish</button>
+        <span class="xabar" id="kirish-xabar"></span>
+      </div>
+    </div>
+    <p class="small muted">Kodni tadqiqotchi beradi. Kod faqat sizning kuzatuvlaringizni ajratish uchun kerak.</p>
+  </section>
+
+  <!-- VARAQA -->
+  <section id="e-varaqa" hidden>
+    <p class="kicker">Kuzatuvchi: <span id="v-kuzatuvchi"></span></p>
+    <h1>Kuzatuv varaqasi</h1>
+
+    <div class="note">
+      <strong>Qanday to‘ldiriladi.</strong> Varaqani talaba bilan bir necha dars ishlaganingizdan keyin, shu kunlarda o‘zingiz ko‘rgan xatti-harakatga qarab to‘ldiring. Dastlabki kuzatuv amaliyotning birinchi haftasi yakunida, oraliq kuzatuv oltinchi hafta yakunida, yakuniy kuzatuv o‘n ikkinchi hafta yakunida o‘tkaziladi. Talaba haqidagi umumiy taassurotga emas, sinfda ko‘rgan aniq holatlarga tayaning.<br><br>
+      <strong>0</strong> hech ko‘rilmadi · <strong>1</strong> kamdan-kam · <strong>2</strong> ko‘pincha · <strong>3</strong> deyarli har safar · <strong>N</strong> bunday vaziyat bo‘lmadi. Vaziyat bo‘lmagan bo‘lsa, 0 emas, N ni belgilang.<br><br>
+      Varaqa natijasi talabaning amaliyot bahosiga qo‘shilmaydi va talabaga ko‘rsatilmaydi.
+    </div>
+
+    <div class="panel">
+      <label class="fld"><span>Talaba kodi</span>
+        <input type="text" class="mono" id="v-talaba" autocomplete="off" spellcheck="false"></label>
+      <label class="fld"><span>O‘lchov</span>
+        <select id="v-nuqta">
+          <option value="">— tanlang —</option>
+          <option value="PRE">Dastlabki (1-hafta)</option>
+          <option value="MID">Oraliq (6-hafta)</option>
+          <option value="POST">Yakuniy (12-hafta)</option>
+        </select></label>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
+        <label class="fld" style="margin:0"><span>Maktab №</span><input type="text" id="v-maktab" inputmode="numeric"></label>
+        <label class="fld" style="margin:0"><span>Sinf</span><input type="text" id="v-sinf" placeholder="2-A"></label>
+        <label class="fld" style="margin:0"><span>Darslar soni</span><input type="number" id="v-darslar" min="1" max="60"></label>
+      </div>
+    </div>
+
+    <div id="bandlar"></div>
+
+    <label class="fld" style="margin-top:20px"><span>Qo‘shimcha izoh (ixtiyoriy)</span>
+      <textarea id="v-izoh"></textarea></label>
+
+    <div class="amal">
+      <button class="asosiy" id="saqla" type="button">Saqlash</button>
+      <span class="xabar" id="v-xabar"></span>
+    </div>
+    <div class="amal" id="keyingi-blok" hidden>
+      <button id="keyingi" type="button">Keyingi talaba</button>
+      <span class="small muted">Maktab, sinf va o‘lchov saqlanib qoladi.</span>
+    </div>
+  </section>
+</div>
+
+<script src="umumiy.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var GURUHLAR = [
+    { nom: "1. O‘z hissiy holatini boshqarish", bandlar: [
+      "Kutilmagan yoki qiyin vaziyatda (shovqin, intizom buzilishi, xato) ovozini ko‘tarmay, xotirjam ohangda gapiradi.",
+      "Asabiylashgan yoki xavotirlangan paytda ham buni o‘quvchilarga o‘tkazmaydi, darsni bir maromda davom ettiradi.",
+      "O‘z xatosini yoki rejadagi uzilishni vazmin qabul qiladi va darsni yo‘lga qaytaradi.",
+      "O‘quvchining noxush xatti-harakatiga darhol tanbeh bilan emas, bir zum to‘xtab, o‘ylab javob beradi."
+    ] },
+    { nom: "2. O‘quvchi holatini tushunish va unga javob qaytarish", bandlar: [
+      "O‘quvchining xafa, charchagan yoki darsdan chetlanganini (yuz ifodasi, tana holati, jimlik) payqaydi.",
+      "Holati o‘zgargan o‘quvchiga e’tibor qaratadi: yoniga boradi, so‘raydi yoki topshiriqni moslashtiradi.",
+      "O‘quvchining his-tuyg‘usini so‘z bilan nomlab, uni tushunganini bildiradi (masalan: «Xafa bo‘lganingni ko‘ryapman»).",
+      "O‘quvchilar o‘rtasidagi kelishmovchilikda ikkala tomonni tinglaydi, birini shoshib ayblamaydi.",
+      "Xato qilgan o‘quvchini kulgi qilmaydi, boshqalarga ham kuldirmaydi; urinishini rag‘batlantiradi."
+    ] },
+    { nom: "3. Kasbiy o‘zini tutish", bandlar: [
+      "Sinfda o‘zini o‘qituvchi sifatida tutadi: tashabbus ko‘rsatadi, o‘quvchilar oldida ishonch bilan turadi.",
+      "Sinf o‘qituvchisi va maktab xodimlari bilan hamkorlik qiladi, kerak bo‘lganda maslahat so‘raydi.",
+      "Ota-onalar yoki boshqa kattalar bilan muloqotda xushmuomala va kasbiy ohangni saqlaydi."
+    ] },
+    { nom: "4. Refleksiya", bandlar: [
+      "Darsdan keyin o‘z ishini tahlil qiladi: nima yaxshi o‘tganini va nimani o‘zgartirishini aytib bera oladi.",
+      "Tanqidiy fikrni xafa bo‘lmay qabul qiladi.",
+      "Avvalgi darsda aytilgan tavsiyani keyingi darslarda qo‘llaganini ko‘rish mumkin."
+    ] }
+  ];
+  var QIYMATLAR = ["0", "1", "2", "3", "N"];
+  var kuzatuvchi = "", baho = {};
+
+  function bandlarChiz() {
+    var uy = el("bandlar"); tozala(uy);
+    var n = 0;
+    GURUHLAR.forEach(function (g) {
+      uy.appendChild(yarat("div", "guruh-sarlavha", g.nom));
+      g.bandlar.forEach(function (matn) {
+        n++;
+        var raqam = String(n);
+        var d = yarat("div", "band"); d.id = "band-" + raqam;
+        var t = yarat("div", "b-matn");
+        t.appendChild(yarat("span", "b-n", raqam));
+        t.appendChild(yarat("span", "", matn));
+        d.appendChild(t);
+        var sh = yarat("div", "shkala");
+        QIYMATLAR.forEach(function (q) {
+          var b = yarat("button", baho[raqam] === q ? "tanlangan" : "", q); b.type = "button";
+          b.setAttribute("aria-label", raqam + "-band: " + q);
+          b.addEventListener("click", function () {
+            baho[raqam] = q;
+            var hamma = sh.querySelectorAll("button");
+            for (var i = 0; i < hamma.length; i++) hamma[i].classList.remove("tanlangan");
+            b.classList.add("tanlangan");
+            d.classList.remove("javobsiz");
+            el("v-xabar").textContent = "";
+          });
+          sh.appendChild(b);
+        });
+        d.appendChild(sh);
+        uy.appendChild(d);
+      });
+    });
+  }
+
+  el("kirish").addEventListener("click", function () {
+    var k = el("kkod").value.trim().toUpperCase();
+    if (!k) { el("kirish-xabar").textContent = "Kodni kiriting."; return; }
+    el("kirish").disabled = true;
+    el("kirish-xabar").textContent = "Tekshirilmoqda…";
+    sbRpc("kuzatuvchi_tekshir", { p_kod: k }).then(function (j) {
+      el("kirish").disabled = false;
+      if (j.xato) { el("kirish-xabar").textContent = xatoMatni(j); return; }
+      if (j.body !== true) { el("kirish-xabar").textContent = "Bunday kuzatuvchi kodi yo‘q."; return; }
+      kuzatuvchi = k;
+      xotiraYoz("kuzatuvchi_kod", k);
+      el("v-kuzatuvchi").textContent = k;
+      el("e-kirish").hidden = true;
+      el("e-varaqa").hidden = false;
+      bandlarChiz();
+      window.scrollTo(0, 0);
+    });
+  });
+
+  el("saqla").addEventListener("click", function () {
+    var talaba = el("v-talaba").value.trim().toUpperCase();
+    var nuqta = el("v-nuqta").value;
+    var darslar = parseInt(el("v-darslar").value, 10);
+    el("v-xabar").className = "xabar";
+    if (!talaba) { el("v-xabar").textContent = "Talaba kodini kiriting."; el("v-talaba").focus(); return; }
+    if (!nuqta)  { el("v-xabar").textContent = "O‘lchovni tanlang."; el("v-nuqta").focus(); return; }
+    if (!darslar || darslar < 1) { el("v-xabar").textContent = "Kuzatilgan darslar sonini kiriting."; el("v-darslar").focus(); return; }
+    var yoq = [];
+    for (var i = 1; i <= 15; i++) if (!baho[String(i)]) yoq.push(i);
+    if (yoq.length) {
+      yoq.forEach(function (n) { el("band-" + n).classList.add("javobsiz"); });
+      el("v-xabar").textContent = yoq.length + " ta band belgilanmadi.";
+      el("band-" + yoq[0]).scrollIntoView({ block: "center" });
+      return;
+    }
+    el("saqla").disabled = true;
+    el("v-xabar").textContent = "Saqlanmoqda…";
+    sbRpc("kuzatuv_saqla", {
+      p_kuzatuvchi: kuzatuvchi, p_talaba: talaba, p_nuqta: nuqta,
+      p_maktab: el("v-maktab").value.trim(), p_sinf: el("v-sinf").value.trim(),
+      p_darslar: darslar, p_bandlar: baho, p_izoh: el("v-izoh").value.trim()
+    }).then(function (j) {
+      el("saqla").disabled = false;
+      if (j.xato) { el("v-xabar").textContent = xatoMatni(j); return; }
+      var MATN = {
+        saqlandi: "Saqlandi. Rahmat.",
+        talaba_topilmadi: "Bunday talaba kodi yo‘q. Kodni tekshiring.",
+        kuzatuvchi_topilmadi: "Kuzatuvchi kodi topilmadi. Sahifani yangilab, qayta kiring.",
+        toliq_emas: "Barcha bandlarni belgilang."
+      };
+      el("v-xabar").textContent = MATN[j.body] || "Saqlanmadi.";
+      if (j.body === "saqlandi") {
+        el("v-xabar").className = "xabar ok";
+        el("keyingi-blok").hidden = false;
+      }
+    });
+  });
+
+  el("keyingi").addEventListener("click", function () {
+    baho = {};
+    el("v-talaba").value = ""; el("v-izoh").value = ""; el("v-darslar").value = "";
+    el("v-xabar").textContent = "";
+    el("keyingi-blok").hidden = true;
+    bandlarChiz();
+    window.scrollTo(0, 0);
+    el("v-talaba").focus();
+  });
+
+  var k = manzilParam("k").toUpperCase() || (xotiraOl("kuzatuvchi_kod") || "");
+  if (k) { el("kkod").value = k; el("kirish").click(); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boshlang‘ich sinf pedagogik vaziyatlari simulyatori</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --surface-2:#F4F2EC;
+    --ink:#1E2422; --muted:#67736E; --line:#E3DFD6; --line-2:#CFC9BC;
+    --accent:#2F6F5E; --accent-ink:#FFFFFF; --accent-soft:#E7EFEB;
+    --warn:#8A5A2B; --warn-soft:#F6EEE2;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
+      --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
+      --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
+      --warn:#D7A76A; --warn-soft:#2A2319; color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.55}
+  [hidden]{display:none!important}
+  .wrap{max-width:720px; margin:0 auto; padding:0 16px 64px}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(24px,6vw,32px); line-height:1.2; margin:26px 0 6px}
+  h2{font-family:var(--serif); font-weight:600; font-size:20px; margin:24px 0 8px}
+  p{margin:0 0 10px; max-width:65ch}
+  .muted{color:var(--muted)} .small{font-size:14px}
+  .kicker{font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); font-weight:600; margin:0}
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px; margin:14px 0}
+  .vaziyat{font-family:var(--serif); font-size:18px; line-height:1.5; background:var(--surface-2); border-radius:10px; padding:16px; margin:12px 0}
+  .variantlar{display:grid; gap:8px}
+  button{font:inherit; cursor:pointer; border-radius:7px; border:1px solid var(--line-2); background:var(--surface); color:var(--ink); padding:10px 16px}
+  button.asosiy{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .variantlar button{text-align:start; display:flex; gap:10px; align-items:flex-start; padding:11px 13px}
+  .variantlar .h{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+  .variantlar button.tanlangan{background:var(--accent-soft); border-color:var(--accent)}
+  .variantlar button[disabled]{cursor:default}
+  .variantlar button.boshqa{opacity:.6}
+  .izoh{border-inline-start:3px solid var(--accent); background:var(--accent-soft); padding:10px 14px; border-radius:0 6px 6px 0; margin:12px 0}
+  .izoh.past{border-color:var(--warn); background:var(--warn-soft)}
+  .amal{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:14px}
+  .bar{height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin:6px 0 0}
+  .bar > i{display:block; height:100%; background:var(--accent)}
+  .yoqish{display:flex; justify-content:space-between; font-size:13px; color:var(--muted)}
+  .profil-qator{padding:12px 0; border-top:1px solid var(--line)}
+  .profil-qator:first-child{border-top:0}
+  .profil-qator .nom{display:flex; justify-content:space-between; gap:10px; font-weight:600}
+  .profil-qator .son{font-family:var(--mono); font-weight:500}
+  .profil-qator p{font-size:14.5px; color:var(--muted); margin:6px 0 0}
+  input[type=text]{width:100%; font:inherit; padding:10px 12px; background:var(--bg); color:var(--ink); border:1px solid var(--line-2); border-radius:7px; font-family:var(--mono)}
+  table{border-collapse:collapse; width:100%; font-size:14px}
+  th,td{text-align:start; padding:7px 6px; border-bottom:1px solid var(--line)}
+  th{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em}
+  td.son{text-align:end; font-family:var(--mono)}
+  @media print{ button, .amal{display:none!important} body{background:#fff; color:#000} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section id="e-bosh">
+    <p class="kicker" style="margin-top:22px">Bo‘lajak boshlang‘ich sinf o‘qituvchilari uchun</p>
+    <h1>Boshlang‘ich sinf pedagogik vaziyatlari simulyatori</h1>
+    <p class="muted">Sizga sakkizta haqiqiy sinf vaziyati beriladi. Har birida o‘qituvchi sifatida qanday yo‘l tutishingizni tanlaysiz. Dastur tanlovingizning o‘quvchiga va darsga ta’sirini izohlaydi, oxirida esa emotsional intellektning to‘rt tarkibiy qismi bo‘yicha profilingizni ko‘rsatadi.</p>
+    <div class="panel">
+      <p class="small" style="margin-bottom:8px"><strong>Baholanadigan tarkibiy qismlar:</strong></p>
+      <ol class="small" style="margin:0; padding-inline-start:20px">
+        <li>O‘z kechinmasini anglash</li>
+        <li>O‘z holatini boshqarish</li>
+        <li>O‘quvchi holatini tushunish</li>
+        <li>Vaziyatga mos pedagogik javob orqali yo‘naltirish</li>
+      </ol>
+    </div>
+    <label class="small" for="kod" style="display:block; font-weight:600; margin-bottom:4px">Kodingiz yoki ismingiz (ixtiyoriy, natija varag‘ida ko‘rinadi)</label>
+    <input type="text" id="kod" autocomplete="off" spellcheck="false">
+    <div class="amal">
+      <button class="asosiy" id="boshla" type="button">Boshlash</button>
+      <span class="small muted">Taxminan 15 daqiqa</span>
+    </div>
+    <div id="tarix-blok" hidden>
+      <h2>Oldingi natijalaringiz</h2>
+      <p class="small muted">Shu qurilmada saqlangan. O‘sishingizni solishtirish uchun.</p>
+      <table><thead><tr><th>Sana</th><th class="son">1</th><th class="son">2</th><th class="son">3</th><th class="son">4</th></tr></thead><tbody id="tarix"></tbody></table>
+    </div>
+  </section>
+
+  <section id="e-vaziyat" hidden>
+    <div class="yoqish"><span id="v-raqam"></span><span id="v-mavzu"></span></div>
+    <div class="bar"><i id="v-bar"></i></div>
+    <div class="vaziyat" id="v-matn"></div>
+    <p class="small muted">O‘qituvchi sifatida eng avvalo nima qilasiz?</p>
+    <div class="variantlar" id="v-variantlar"></div>
+    <div id="v-izoh" hidden></div>
+    <div class="amal" id="v-amal" hidden>
+      <button class="asosiy" id="keyingi" type="button">Keyingi vaziyat</button>
+    </div>
+  </section>
+
+  <section id="e-natija" hidden>
+    <p class="kicker" style="margin-top:22px">Natija</p>
+    <h1>Emotsional-pedagogik profilingiz</h1>
+    <p class="muted" id="n-izoh"></p>
+    <div class="panel" id="profil"></div>
+    <h2>Tanlovlaringiz</h2>
+    <div id="n-tanlovlar" class="small"></div>
+    <p class="small muted" style="margin-top:14px">Natija baho emas. U qaysi tarkibiy qismga ko‘proq e’tibor berish kerakligini ko‘rsatadi. Simulyatorni bir necha haftadan keyin qayta o‘tib, o‘zgarishni solishtiring.</p>
+    <div class="amal">
+      <button id="chop" type="button">Chop etish yoki PDF</button>
+      <button id="qayta" type="button">Qaytadan boshlash</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/* =====================================================================
+   Boshlang'ich sinf pedagogik vaziyatlari simulyatori
+   Har bir variant to'rt tarkibiy qism bo'yicha 0-2 ball oladi:
+   [o'z kechinmasini anglash, o'z holatini boshqarish,
+    o'quvchi holatini tushunish, vaziyatga mos pedagogik javob]
+   ===================================================================== */
+var TARKIBIY = [
+  { nom: "O‘z kechinmasini anglash",
+    tavsiya: ["Qiyin lahzada o‘zingizda nima kechayotganini aniq so‘z bilan nomlashni mashq qiling: «xavotirlandim», «noqulay bo‘ldim», «sabrim tugayapti».",
+              "Holatingizni ko‘pincha sezasiz. Endi uning sababini ham birga nomlashga harakat qiling.",
+              "O‘z kechinmangizni yaxshi anglaysiz va uni qaroringizga ta’sir qildirmaysiz."] },
+  { nom: "O‘z holatini boshqarish",
+    tavsiya: ["Javob berishdan oldin bir lahza to‘xtash, nafas olish va keyin gapirishni odat qiling.",
+              "Ko‘p vaziyatda xotirjamlikni saqlaysiz. Bosim kuchli bo‘lganda ham shu usulni qo‘llang.",
+              "Bosim ostida ham xotirjam ohangni va darsning maromini saqlay olasiz."] },
+  { nom: "O‘quvchi holatini tushunish",
+    tavsiya: ["Bolaning xatti-harakati ortidagi holatni ko‘rishga urining: yuz ifodasi, tana holati, ovozi nima deyapti?",
+              "Bolaning holatini ko‘pincha to‘g‘ri sezasiz. Xulosa chiqarishdan oldin kamida ikki belgiga tayaning.",
+              "O‘quvchilar holatini aniq ko‘rasiz va sababini tushunishga harakat qilasiz."] },
+  { nom: "Vaziyatga mos pedagogik javob",
+    tavsiya: ["Javobingizda bolaning holatini nomlang va unga keyingi qadamni ko‘rsating.",
+              "Javoblaringiz ko‘pincha o‘rinli. Ularni bolaning qadr-qimmatini saqlagan holda o‘qishni davom ettirishga yo‘naltiring.",
+              "Javoblaringiz bolani qo‘llab-quvvatlaydi va o‘quv faoliyatini davom ettiradi."] }
+];
+
+var VAZIYATLAR = [
+  { mavzu: "Dars boshi",
+    matn: "1-sinf. Qo‘ng‘iroq chalindi, lekin Zarina eshik oldida onasining qo‘lini qo‘yib yubormay yig‘lamoqda. Onasi ham xijolat bo‘lib, ketolmay turibdi. Sinfdagi bolalar ularga qarab qolgan.",
+    v: [
+      { m: "Onasiga tezroq ketishini aytaman, Zarinani qo‘lidan tutib sinfga olib kiraman.", b: [0, 1, 0, 0],
+        i: "Ajralish tezlashadi, lekin bolaning qo‘rquvi tan olinmaydi. Ertangi kuni holat takrorlanishi mumkin." },
+      { m: "Zarinaning yoniga cho‘kib, «Onangdan ajralish qiyin, tushunaman» deyman. Unga sinfda bitta muhim vazifa topshiraman va onasi bilan qachon ko‘rishishini aytaman.", b: [1, 2, 2, 2],
+        i: "Bolaning holati nomlandi, unga aniq vazifa va kutish nuqtasi berildi. Bu ajralishni yengillashtiradi va sinf ham tinch kuzatadi." },
+      { m: "Sinfdagi bolalarga ish berib, Zarina o‘zi tinchlanguncha kutaman.", b: [1, 1, 1, 0],
+        i: "Sinf ishlaydi, lekin bola yordamsiz qoladi. Tinchlanish uzoq cho‘zilishi mumkin." },
+      { m: "«Katta qiz bo‘lding, yig‘lash uyat» deb, uni ovutishga harakat qilaman.", b: [0, 1, 0, 0],
+        i: "Bunday gap bolaning his-tuyg‘usini inkor qiladi va uyalish hissini qo‘shadi." }
+    ] },
+  { mavzu: "Guruh ishi",
+    matn: "3-sinf, guruhda loyiha ishi. Sardor stulini keskin surib: «Men bular bilan ishlamayman, ular meni gapirtirishmaydi!» dedi va deraza oldiga borib turdi.",
+    v: [
+      { m: "Sardorga joyiga qaytishni buyuraman, aks holda baho pasayishini aytaman.", b: [0, 0, 0, 0],
+        i: "Tartib tiklanadi, lekin Sardor eshitilmaganini yana bir bor his qiladi. Guruhdagi muammo hal bo‘lmaydi." },
+      { m: "Avval o‘zimni bosib, Sardorning yoniga boraman. «Fikringni aytishga imkon bo‘lmagani seni xafa qildi shekilli» deyman va guruhda har kim navbat bilan gapiradigan qoida taklif qilaman.", b: [2, 2, 2, 2],
+        i: "O‘qituvchi o‘z holatini boshqardi, bolaning holatini nomladi va muammoni guruh qoidasi orqali hal qildi." },
+      { m: "Sardorni boshqa guruhga o‘tkazaman.", b: [1, 1, 1, 1],
+        i: "Keskinlik vaqtincha yo‘qoladi, lekin Sardor fikrini aytishni o‘rganmaydi, guruh ham boshqalarni tinglashni o‘rganmaydi." },
+      { m: "Guruhdagi boshqa bolalarni Sardorni gapirtirmagani uchun koyiyman.", b: [0, 1, 1, 0],
+        i: "Sardorning holati e’tiborga olindi, lekin guruh ayblandi. Endi boshqa bolalar o‘zini adolatsiz munosabatda his qiladi." }
+    ] },
+  { mavzu: "Nazorat ishi",
+    matn: "4-sinf, matematikadan nazorat ishi. Siz Nodiraning sherigining daftariga qarab ko‘chirayotganini ko‘rdingiz. Nigohingiz to‘qnashganda Nodira qizarib, ko‘zlarini yerga tikdi.",
+    v: [
+      { m: "Butun sinf oldida uning ishini olib qo‘yib, «Ko‘chirgan bola baho olmaydi» deyman.", b: [0, 0, 0, 0],
+        i: "Qoida eslatildi, lekin bola sinf oldida sharmanda bo‘ldi. Keyingi safar u qiyinchiligini yashirishga harakat qiladi." },
+      { m: "Uning yoniga borib, past ovozda o‘z ishini davom ettirishini so‘rayman. Darsdan keyin u bilan alohida gaplashib, qaysi topshiriq qiyin bo‘lganini aniqlayman.", b: [2, 2, 2, 2],
+        i: "Qoida saqlandi, bolaning qadr-qimmati himoyalandi. Suhbat ko‘chirishning sababini, ya’ni qaysi mavzu o‘zlashtirilmaganini ko‘rsatadi." },
+      { m: "Ko‘rmaganga olaman, chunki bola allaqachon uyaldi.", b: [1, 1, 1, 0],
+        i: "Bolaning holati sezildi, lekin pedagogik javob berilmadi. Bilimdagi bo‘shliq ham ochilmay qoladi." },
+      { m: "Nodiraning ota-onasiga darhol xabar beraman.", b: [0, 1, 0, 1],
+        i: "Ota-ona bilan hamkorlik muhim, lekin avval bolaning o‘zi bilan gaplashish kerak edi." }
+    ] },
+  { mavzu: "Bosim ostida",
+    matn: "Ochiq dars, orqada metodist o‘tiribdi. Siz rejadan ortda qoldingiz va charchadingiz. Sinf shovqin qilmoqda, Bobur esa qalami bilan partani tinmay taqillatyapti.",
+    v: [
+      { m: "Ovozimni ko‘tarib: «Bobur, bas qil!» deyman.", b: [0, 0, 0, 0],
+        i: "Asabiylik sinfga o‘tadi, shovqin vaqtincha to‘xtab, keyin kuchayishi mumkin. Metodist ham buni sezadi." },
+      { m: "Bir lahza to‘xtab, ichimda «xavotirlanyapman» deb holatimni nomlayman. Boburning yoniga borib, qo‘limni partasiga qo‘yaman va unga tarqatma materiallarni yig‘ish vazifasini beraman.", b: [2, 2, 1, 2],
+        i: "O‘qituvchi o‘z holatini anglab boshqardi va bolaning harakatga bo‘lgan ehtiyojini darsga foydali vazifaga aylantirdi." },
+      { m: "Boburga e’tibor bermay, rejani tezroq tugatishga harakat qilaman.", b: [1, 1, 0, 0],
+        i: "Reja birinchi o‘ringa chiqdi. Taqillatish davom etadi va boshqalarning diqqatini ham chalg‘itadi." },
+      { m: "Butun sinfga ikki daqiqalik jismoniy daqiqa o‘tkazaman, keyin darsni davom ettiraman.", b: [1, 2, 1, 1],
+        i: "Sinfning charchoqligi to‘g‘ri sezildi. Ammo Boburning alohida ehtiyoji e’tibordan chetda qoldi." }
+    ] },
+  { mavzu: "Tanaffusdan keyin",
+    matn: "2-sinf. Tanaffusdan keyin Kamola ko‘z yoshi bilan sinfga kirdi: «Ular meni o‘yinga qo‘shishmadi». Dars boshlanishi kerak.",
+    v: [
+      { m: "«Hech qisi yo‘q, ertaga qo‘shishadi» deyman va darsni boshlayman.", b: [0, 1, 0, 0],
+        i: "Bolaning xafaligi arzimas deb ko‘rsatildi. U o‘qituvchiga keyingi safar aytmasligi mumkin." },
+      { m: "Sinfga mustaqil topshiriq beraman. Kamola bilan bir daqiqa gaplashib, «Chetda qolish og‘ir, xafa bo‘lganingni ko‘ryapman» deyman. Keyingi tanaffusda kim bilan o‘ynashni xohlashini so‘rayman va o‘yinni birga tashkil qilishni va’da qilaman.", b: [1, 2, 2, 2],
+        i: "Bolaning holati tan olindi, dars to‘xtamadi va muammoni hal qilish rejasi tuzildi." },
+      { m: "Butun sinf oldida bolalarni Kamolani o‘yinga qo‘shmagani uchun tanqid qilaman.", b: [0, 1, 1, 0],
+        i: "Kamolaning holati e’tiborga olindi, lekin sinf oldida muhokama uni yanada noqulay ahvolga solishi mumkin." },
+      { m: "Kamolani sinf rahbari yoki psixologga yuboraman.", b: [0, 1, 1, 1],
+        i: "Yordam izlandi, lekin bu vaziyatni o‘qituvchining o‘zi bir daqiqada yengillatishi mumkin edi." }
+    ] },
+  { mavzu: "Tasviriy san’at",
+    matn: "3-sinf, tasviriy san’at darsi. Azizbek chizgan rasmini g‘ijimlab tashladi: «Menga hech narsa chiqmaydi! Boshqalarniki chiroyli».",
+    v: [
+      { m: "«Rasming ham chiroyli edi-ku» deyman va yangi qog‘oz beraman.", b: [0, 1, 1, 1],
+        i: "Yangi imkon berildi, lekin bolaning tushkunligi tan olinmadi va «chiroyli» bahosi unga ishonarsiz eshitiladi." },
+      { m: "«Boshqalarnikidek chiqmagani seni xafa qildi shekilli» deyman. Rasmining qaysi qismi o‘ziga yoqqanini birga topamiz va faqat bitta qismini qayta chizishni taklif qilaman.", b: [1, 2, 2, 2],
+        i: "Bolaning holati nomlandi, uning e’tibori yutuqqa qaratildi va kichik, bajariladigan qadam taklif qilindi." },
+      { m: "Qog‘ozni isrof qilgani uchun tanbeh beraman.", b: [0, 0, 0, 0],
+        i: "Bolaning tushkunligi e’tiborsiz qoldi. U endi chizishdan butunlay qochishi mumkin." },
+      { m: "Azizbekka darsning qolgan qismida boshqa ish beraman.", b: [1, 1, 0, 0],
+        i: "Keskinlik so‘ndi, lekin bola «menga chiqmaydi» degan fikrda qoladi." }
+    ] },
+  { mavzu: "Ota-ona bilan muloqot",
+    matn: "Darsdan keyin bir ota sinf eshigi oldida baland ovozda: «O‘g‘limni sherigi urib qo‘ygan! Siz nimaga qarayapsiz? Uni darhol boshqa partaga o‘tkazing!» dedi.",
+    v: [
+      { m: "«Men har bir bolani kuzatib turolmayman» deb javob beraman.", b: [0, 0, 0, 0],
+        i: "Himoyalanish keskinlikni oshiradi. Ota-ona o‘qituvchiga ishonchini yo‘qotadi." },
+      { m: "Otaning gapini bo‘lmasdan tinglayman. «O‘g‘lingiz uchun xavotirlanganingizni tushunaman» deyman. Voqeani aniqlashtirib olishimni, ertaga ikkala bola bilan gaplashib, natijasini aytishimni bildiraman.", b: [2, 2, 2, 2],
+        i: "O‘qituvchi o‘zini boshqardi, otaning holatini tan oldi va kasbiy pozitsiyasini saqlagan holda aniq reja taklif qildi." },
+      { m: "Otaning talabiga darhol rozi bo‘lib, bolani boshqa partaga o‘tkazaman.", b: [1, 1, 1, 0],
+        i: "Keskinlik so‘ndi, lekin voqea aniqlanmadi. Ikkala bolaning ham fikri eshitilmadi." },
+      { m: "Uni direktorga yuboraman.", b: [1, 1, 0, 0],
+        i: "Suhbatdan qochildi. Bu masalani sinf o‘qituvchisi o‘zi hal qilishi mumkin edi." }
+    ] },
+  { mavzu: "O‘qituvchining xatosi",
+    matn: "4-sinf, ona tili. Siz doskada so‘zni xato yozdingiz. Diyora qo‘lini ko‘tarib, xatoni aytdi. Bir necha bola kulib yubordi. Siz yuzingiz qizarganini sezdingiz.",
+    v: [
+      { m: "«Bu ataylab qilingan, kim sezarkin deb tekshirdim» deyman.", b: [0, 1, 0, 0],
+        i: "Noqulaylik yashirildi. Bolalar xatoni tan olmaslik namunasini ko‘radi." },
+      { m: "Ichimda «noqulay bo‘ldim» deb holatimni nomlayman. Jilmayib: «Rahmat, Diyora, diqqating zo‘r ekan. Xato hammada bo‘ladi, muhimi uni tuzatish» deyman va xatoni birga tuzatamiz.", b: [2, 2, 1, 2],
+        i: "O‘qituvchi o‘z kechinmasini anglab boshqardi va xatoga to‘g‘ri munosabat namunasini ko‘rsatdi. Bu bolalarning xato qilishdan qo‘rqmasligiga yordam beradi." },
+      { m: "Kulgan bolalarga qattiq tanbeh beraman.", b: [0, 0, 1, 0],
+        i: "O‘qituvchining noqulayligi tanbehga aylandi. Diyora ham endi xatoni aytishdan cho‘chishi mumkin." },
+      { m: "Xatoni indamay tuzatib, darsni davom ettiraman.", b: [1, 1, 0, 1],
+        i: "Xato tuzatildi, lekin Diyoraning hissasi va xatoga to‘g‘ri munosabat ko‘rsatish imkoni qo‘ldan boy berildi." }
+    ] }
+];
+
+(function () {
+  "use strict";
+  var TARIX_KALIT = "simulyator_tarix";
+  var joriy = 0, tanlovlar = [], tartiblar = [];
+
+  function el(id) { return document.getElementById(id); }
+  function yarat(t, c, m) { var e = document.createElement(t); if (c) e.className = c; if (m !== undefined) e.textContent = m; return e; }
+  function tozala(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+  function ekran(n) { ["bosh", "vaziyat", "natija"].forEach(function (x) { el("e-" + x).hidden = x !== n; }); window.scrollTo(0, 0); }
+  function aralash(n) {
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (i = n - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function tarixOl() { try { return JSON.parse(localStorage.getItem(TARIX_KALIT) || "[]"); } catch (e) { return []; } }
+  function tarixYoz(t) { try { localStorage.setItem(TARIX_KALIT, JSON.stringify(t.slice(-10))); } catch (e) {} }
+
+  function tarixChiz() {
+    var t = tarixOl(), tb = el("tarix");
+    el("tarix-blok").hidden = !t.length;
+    tozala(tb);
+    t.slice().reverse().forEach(function (r) {
+      var tr = yarat("tr");
+      tr.appendChild(yarat("td", "", r.sana + (r.kod ? " · " + r.kod : "")));
+      r.foiz.forEach(function (f) { tr.appendChild(yarat("td", "son", f + "%")); });
+      tb.appendChild(tr);
+    });
+  }
+
+  el("boshla").addEventListener("click", function () {
+    joriy = 0; tanlovlar = [];
+    tartiblar = VAZIYATLAR.map(function (v) { return aralash(v.v.length); });
+    vaziyatChiz(); ekran("vaziyat");
+  });
+
+  function vaziyatChiz() {
+    var v = VAZIYATLAR[joriy];
+    el("v-raqam").textContent = (joriy + 1) + " / " + VAZIYATLAR.length;
+    el("v-mavzu").textContent = v.mavzu;
+    el("v-bar").style.width = (joriy / VAZIYATLAR.length * 100) + "%";
+    el("v-matn").textContent = v.matn;
+    var uy = el("v-variantlar"); tozala(uy);
+    tartiblar[joriy].forEach(function (idx, k) {
+      var b = yarat("button"); b.type = "button";
+      b.appendChild(yarat("span", "h", "ABCD".charAt(k)));
+      b.appendChild(yarat("span", "", v.v[idx].m));
+      b.addEventListener("click", function () { tanla(idx, b); });
+      uy.appendChild(b);
+    });
+    el("v-izoh").hidden = true; el("v-amal").hidden = true;
+    el("keyingi").textContent = joriy === VAZIYATLAR.length - 1 ? "Natijani ko‘rish" : "Keyingi vaziyat";
+  }
+
+  function tanla(idx, tugma) {
+    var v = VAZIYATLAR[joriy], tanlov = v.v[idx];
+    tanlovlar[joriy] = idx;
+    var hamma = el("v-variantlar").querySelectorAll("button");
+    for (var i = 0; i < hamma.length; i++) { hamma[i].disabled = true; if (hamma[i] !== tugma) hamma[i].classList.add("boshqa"); }
+    tugma.classList.add("tanlangan");
+    var jami = tanlov.b.reduce(function (a, b) { return a + b; }, 0);
+    var izoh = el("v-izoh"); tozala(izoh);
+    var d = yarat("div", "izoh" + (jami >= 6 ? "" : " past"));
+    d.appendChild(yarat("p", "", tanlov.i));
+    if (jami < 6) {
+      var eng = v.v.reduce(function (a, b) { return b.b.reduce(function (x, y) { return x + y; }, 0) > a.b.reduce(function (x, y) { return x + y; }, 0) ? b : a; });
+      var p = yarat("p", "small"); p.style.margin = "8px 0 0";
+      p.appendChild(yarat("strong", "", "Mos yo‘l: ")); p.appendChild(document.createTextNode(eng.m));
+      d.appendChild(p);
+    }
+    izoh.appendChild(d);
+    izoh.hidden = false; el("v-amal").hidden = false;
+    el("keyingi").focus();
+  }
+
+  el("keyingi").addEventListener("click", function () {
+    if (joriy < VAZIYATLAR.length - 1) { joriy++; vaziyatChiz(); window.scrollTo(0, 0); }
+    else natijaChiz();
+  });
+
+  function hisobla() {
+    var olgan = [0, 0, 0, 0], maks = [0, 0, 0, 0];
+    VAZIYATLAR.forEach(function (v, i) {
+      for (var k = 0; k < 4; k++) {
+        maks[k] += Math.max.apply(null, v.v.map(function (x) { return x.b[k]; }));
+        olgan[k] += v.v[tanlovlar[i]].b[k];
+      }
+    });
+    return olgan.map(function (o, k) { return Math.round(o / maks[k] * 100); });
+  }
+
+  function natijaChiz() {
+    var foiz = hisobla(), kod = el("kod").value.trim();
+    var d = new Date(), p = function (x) { return (x < 10 ? "0" : "") + x; };
+    var sana = d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+    el("n-izoh").textContent = (kod ? kod + " · " : "") + sana + " · " + VAZIYATLAR.length + " ta vaziyat";
+    var uy = el("profil"); tozala(uy);
+    TARKIBIY.forEach(function (t, k) {
+      var f = foiz[k], dr = f <= 33 ? 0 : (f <= 66 ? 1 : 2);
+      var q = yarat("div", "profil-qator");
+      var n = yarat("div", "nom"); n.appendChild(yarat("span", "", t.nom)); n.appendChild(yarat("span", "son", f + "%"));
+      q.appendChild(n);
+      var b = yarat("div", "bar"); var i = yarat("i"); i.style.width = f + "%"; b.appendChild(i); q.appendChild(b);
+      q.appendChild(yarat("p", "", t.tavsiya[dr]));
+      uy.appendChild(q);
+    });
+    var tn = el("n-tanlovlar"); tozala(tn);
+    var ol = yarat("ol"); ol.style.paddingInlineStart = "20px";
+    VAZIYATLAR.forEach(function (v, i) {
+      var li = yarat("li"); li.style.marginBottom = "6px";
+      li.appendChild(yarat("strong", "", v.mavzu + ". "));
+      li.appendChild(document.createTextNode(v.v[tanlovlar[i]].m));
+      ol.appendChild(li);
+    });
+    tn.appendChild(ol);
+    var t = tarixOl(); t.push({ sana: sana, kod: kod, foiz: foiz }); tarixYoz(t);
+    ekran("natija");
+  }
+
+  el("qayta").addEventListener("click", function () { tarixChiz(); ekran("bosh"); });
+  el("chop").addEventListener("click", function () { window.print(); });
+  tarixChiz();
+})();
+</script>
+<p style="max-width:960px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid rgba(128,128,128,.35);font:13px/1.5 system-ui,sans-serif;opacity:.75"><a href="../index.html" style="color:inherit">Portal bosh sahifasi</a> · © 2026 Aminova Nasiba Davlatboy qizi. Ta’lim maqsadida foydalanilganda muallif va manba ko‘rsatilishi so‘raladi.</p>
+</body>
+</html>

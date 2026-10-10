@@ -3,436 +3,543 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tajriba-sinov holati</title>
+<meta name="robots" content="noindex">
+<title>Tajriba-sinov boshqaruvi</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="uslub.css">
 <style>
-  :root{
-    --bg:#FBFAF7; --surface:#FFFFFF; --surface-2:#F4F2EC;
-    --ink:#1E2422; --muted:#67736E; --line:#E3DFD6; --line-2:#CFC9BC;
-    --accent:#2F6F5E; --accent-ink:#FFFFFF; --accent-soft:#E7EFEB;
-    --warn:#8A5A2B; --warn-soft:#F6EEE2;
-    --serif:"Spectral",Georgia,"Times New Roman",serif;
-    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
-    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-    color-scheme:light;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
-      --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
-      --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
-      --warn:#D7A76A; --warn-soft:#2A2319;
-      color-scheme:dark;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#14181A; --surface:#1B2022; --surface-2:#232A2C;
-    --ink:#E7EAE7; --muted:#98A39E; --line:#2C3336; --line-2:#3C4548;
-    --accent:#79B9A6; --accent-ink:#10201C; --accent-soft:#1E2E2A;
-    --warn:#D7A76A; --warn-soft:#2A2319;
-    color-scheme:dark;
-  }
-
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{margin:0; background:var(--bg); color:var(--ink);
-    font-family:var(--sans); font-size:16px; line-height:1.55}
-  [hidden]{display:none!important}
-  .wrap{max-width:860px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
-
-  h1{font-family:var(--serif); font-weight:600; font-size:clamp(24px,5.5vw,31px);
-     line-height:1.2; text-wrap:balance; margin:28px 0 4px}
-  h2{font-family:var(--serif); font-weight:600; font-size:19px; margin:30px 0 10px}
-  .kicker{font-size:12px; letter-spacing:.09em; text-transform:uppercase;
-    color:var(--muted); font-weight:600; margin:0}
-  p{margin:0 0 12px; max-width:62ch}
-  .muted{color:var(--muted)}
-  .small{font-size:14px}
-
-  button, select{font:inherit; border-radius:7px; border:1px solid var(--line-2);
-    background:var(--surface); color:var(--ink); padding:9px 14px}
-  button{cursor:pointer}
-  button.asosiy{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
-  button[disabled]{opacity:.5; cursor:not-allowed}
-  button:focus-visible, select:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
-
-  .asboblar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0 6px}
+  .asboblar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 6px}
   .asboblar label{font-size:13px; font-weight:600; color:var(--muted)}
-
-  table{border-collapse:collapse; width:100%; font-size:15px}
-  th,td{text-align:start; padding:9px 8px; border-bottom:1px solid var(--line)}
-  th{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600}
-  td.son, th.son{text-align:end; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
-  td.kod{font-family:var(--mono); font-weight:500; white-space:nowrap}
-  td.belgi{text-align:center; font-family:var(--mono)}
-  th.belgi{text-align:center}
-  .tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
-  .tbl-wrap table{font-size:14px}
-  .tbl-wrap th{position:sticky; top:0; background:var(--surface)}
-  tr.jami td{font-weight:600; border-top:2px solid var(--line-2)}
-  @media (max-width:560px){
-    .col-turi{display:none}
-    th,td{padding:9px 5px}
-  }
-
+  .asboblar select, .asboblar input{width:auto}
+  .belgi{text-align:center; font-family:var(--mono)}
   .bor{color:var(--accent); font-weight:600}
   .yoq{color:var(--muted)}
-  .chip{display:inline-block; font-size:12px; padding:1px 8px; border-radius:99px;
-    border:1px solid var(--line-2); background:var(--surface-2); color:var(--muted)}
-  .chip.tajriba{background:var(--accent-soft); border-color:var(--accent); color:var(--ink)}
-
-  .xabar{font-size:14px; color:var(--warn); min-height:20px; margin-top:10px}
+  tr.jami td{font-weight:600; border-top:2px solid var(--line-2)}
   .bosh{padding:22px; text-align:center; color:var(--muted); font-size:14px}
+  .belgi-qator{display:flex; gap:14px; flex-wrap:wrap}
+  .belgi-qator label{display:flex; gap:6px; align-items:center; font-size:15px}
+  td.kod{font-family:var(--mono); white-space:nowrap}
+  .tbl-wrap table{font-size:13.5px}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap keng">
 
-  <p class="kicker">Admin</p>
-  <h1>Tajriba-sinov holati</h1>
-  <p class="muted" id="yangilandi">Yuklanmoqda&#8230;</p>
+  <!-- KIRISH -->
+  <section id="e-kirish">
+    <p class="kicker">Admin</p>
+    <h1>Tajriba-sinov boshqaruvi</h1>
+    <div class="panel" style="max-width:420px">
+      <label class="fld" style="margin-bottom:0"><span>Parol</span>
+        <input type="password" id="parol" autocomplete="current-password"></label>
+      <div class="amal" style="margin-top:14px">
+        <button class="asosiy" id="kirish" type="button">Kirish</button>
+        <span class="xabar" id="kirish-xabar"></span>
+      </div>
+    </div>
+  </section>
 
-  <h2>Guruhlar bo&#8216;yicha</h2>
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Guruh</th><th class="col-turi">Turi</th><th class="son">Talaba</th>
-          <th class="son">PRE</th><th class="son">MID</th><th class="son">POST</th>
-        </tr>
-      </thead>
-      <tbody id="jamlanma"><tr><td colspan="6" class="bosh">&#8230;</td></tr></tbody>
-    </table>
-  </div>
+  <!-- ASOSIY -->
+  <section id="e-asosiy" hidden>
+    <p class="kicker">Admin</p>
+    <h1>Tajriba-sinov boshqaruvi</h1>
+    <p class="muted" id="yangilandi">Yuklanmoqda…</p>
+    <div class="amal" style="margin-top:4px">
+      <button id="yangila" type="button">Yangilash</button>
+      <button id="chiqish" type="button">Chiqish</button>
+    </div>
 
-  <h2>Talabalar</h2>
-  <div class="asboblar">
-    <label for="f-guruh">Guruh</label>
-    <select id="f-guruh"><option value="">hammasi</option></select>
-    <label for="f-holat">Ko&#8216;rsatish</label>
-    <select id="f-holat">
-      <option value="">hammasi</option>
-      <option value="PRE">PRE topshirmaganlar</option>
-      <option value="MID">MID topshirmaganlar</option>
-      <option value="POST">POST topshirmaganlar</option>
-      <option value="tugatgan">uchalasini topshirganlar</option>
-    </select>
-    <button id="yangila">Yangilash</button>
-    <span class="small muted" id="soni"></span>
-  </div>
+    <h2>Sozlamalar</h2>
+    <div class="panel">
+      <h3 style="margin-top:0">So‘rovnomada ochiq o‘lchov</h3>
+      <div class="belgi-qator" id="nuqtalar">
+        <label><input type="checkbox" value="PRE"> Dastlabki (PRE)</label>
+        <label><input type="checkbox" value="MID"> Oraliq (MID)</label>
+        <label><input type="checkbox" value="POST"> Yakuniy (POST)</label>
+      </div>
+      <div class="amal" style="margin-top:10px">
+        <button id="nuqta-saqla" type="button">Saqlash</button>
+        <span class="xabar" id="nuqta-xabar"></span>
+      </div>
+      <p class="small muted" style="margin-top:8px">O‘lchov kuni faqat keraklisini qoldiring. Hech biri belgilanmasa, so‘rovnoma yopiladi.</p>
 
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Kod</th><th>Guruh</th>
-          <th class="belgi">PRE</th><th class="belgi">MID</th><th class="belgi">POST</th>
-        </tr>
-      </thead>
-      <tbody id="royxat"><tr><td colspan="5" class="bosh">&#8230;</td></tr></tbody>
-    </table>
-  </div>
+      <h3>Talabalarga ochiq mashg‘ulotlar</h3>
+      <div class="asboblar">
+        <label for="ochiq">1-mashg‘ulotdan</label>
+        <select id="ochiq"></select>
+        <label for="ochiq">-mashg‘ulotgacha</label>
+        <button id="ochiq-saqla" type="button">Saqlash</button>
+        <span class="xabar" id="ochiq-xabar"></span>
+      </div>
+      <p class="small muted">Har hafta keyingi mashg‘ulotni mashg‘ulotdan 2–3 kun oldin oching, shunda talabalar materialni oldindan o‘qiydi.</p>
+    </div>
 
-  <h2>Eksport</h2>
-  <p class="small muted">Ikkala fayl ham CSV ko&#8216;rinishida yuklanadi, JASP va Excel to&#8216;g&#8216;ridan-to&#8216;g&#8216;ri ochadi.</p>
-  <p class="small muted"><strong>Tahlil uchun</strong> &#8212; har bir talaba bitta qator, PRE, MID va POST ballari alohida ustunlarda. MANOVA va Koen d uchun shu fayl ishlatiladi. Topshirilmagan o&#8216;lchov katagi bo&#8216;sh qoladi.<br>
-  <strong>Xom javoblar</strong> &#8212; har bir topshiriq bitta qator, 45 ta javob alohida ustunda. Bu fayl tahlil uchun emas, ma&#8217;lumotni saqlab qo&#8216;yish uchun.</p>
-  <div class="asboblar">
-    <button class="asosiy" id="eks-tahlil">Tahlil uchun (JASP)</button>
-    <button id="eks-xom">Xom javoblar</button>
-    <span class="small muted" id="eks-xabar"></span>
-  </div>
+    <h2>So‘rovnoma: guruhlar bo‘yicha</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Guruh</th><th>Turi</th><th>Muassasa</th><th class="son">Talaba</th><th class="son">PRE</th><th class="son">MID</th><th class="son">POST</th></tr></thead>
+      <tbody id="jamlanma"><tr><td colspan="7" class="bosh">…</td></tr></tbody>
+    </table></div>
 
-  <div class="xabar" id="xabar"></div>
-  <p class="small muted" style="margin-top:20px">Bu sahifada talabalarning ismi ko&#8216;rsatilmaydi, faqat kodlar. Ism va kod mosligi <em>kodlar.xlsx</em> faylida turadi.</p>
+    <h2>Kundalik va tekshiruvlar</h2>
+    <p class="small muted">Har katakda: kundalik yozgan talabalar soni / guruhdagi talabalar. Qavsda mashg‘ulotdan oldingi tekshiruvni bajarganlar.</p>
+    <div class="tbl-wrap"><table id="kundalik-jadval"></table></div>
 
+    <h2>Kuzatuv varaqalari</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Guruh</th><th class="son">Talaba</th><th class="son">Dastlabki</th><th class="son">Oraliq</th><th class="son">Yakuniy</th></tr></thead>
+      <tbody id="kuzatuv-jamlanma"><tr><td colspan="5" class="bosh">…</td></tr></tbody>
+    </table></div>
+
+    <h3>Kuzatuvchilar</h3>
+    <div class="asboblar">
+      <input type="text" id="kz-izoh" placeholder="Izoh: masalan, 12-maktab, 2-A sinf o‘qituvchisi" style="min-width:260px; flex:1">
+      <button id="kz-qosh" type="button">Yangi kod yaratish</button>
+      <span class="xabar" id="kz-xabar"></span>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Kod</th><th>Izoh</th><th class="son">Varaqalar</th><th>Havola</th></tr></thead>
+      <tbody id="kuzatuvchilar"><tr><td colspan="4" class="bosh">…</td></tr></tbody>
+    </table></div>
+
+    <h2>Talabalar</h2>
+    <div class="asboblar">
+      <label for="f-guruh">Guruh</label>
+      <select id="f-guruh"><option value="">hammasi</option></select>
+      <label for="f-holat">Ko‘rsatish</label>
+      <select id="f-holat">
+        <option value="">hammasi</option>
+        <option value="PRE">PRE topshirmaganlar</option>
+        <option value="MID">MID topshirmaganlar</option>
+        <option value="POST">POST topshirmaganlar</option>
+        <option value="tugatgan">uchalasini topshirganlar</option>
+      </select>
+      <span class="small muted" id="soni"></span>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Kod</th><th>Guruh</th><th class="belgi">PRE</th><th class="belgi">MID</th><th class="belgi">POST</th><th class="son">Kundalik</th><th class="belgi">Kuzatuv</th></tr></thead>
+      <tbody id="royxat"><tr><td colspan="7" class="bosh">…</td></tr></tbody>
+    </table></div>
+
+    <h2>Eksport</h2>
+    <p class="small muted">Barcha fayllar CSV ko‘rinishida yuklanadi, JASP va Excel to‘g‘ridan-to‘g‘ri ochadi.</p>
+    <ul class="toza small muted">
+      <li><strong>Tahlil uchun (JASP)</strong>: har bir talaba bitta qator. So‘rovnoma ballari, foizlari va darajalari, kuzatuv varaqasining o‘rtacha bahosi, kundaliklar soni har o‘lchov uchun alohida ustunda. Styudent t, Mann–Uitni U, Pirson χ² va Koen d shu fayldan hisoblanadi.</li>
+      <li><strong>Xom javoblar</strong>: so‘rovnomaning har bir topshirig‘i bitta qator, 45 ta javob alohida ustunda.</li>
+      <li><strong>Kundaliklar</strong>: har bir kundalik bitta qator, olti bosqich matni bilan. Sifat tahlili uchun.</li>
+      <li><strong>Kuzatuv varaqalari</strong>: har bir varaqa bitta qator, 15 band alohida ustunda. N belgisi bo‘sh katak bo‘lib chiqadi.</li>
+    </ul>
+    <div class="asboblar">
+      <button class="asosiy" id="eks-tahlil" type="button">Tahlil uchun (JASP)</button>
+      <button id="eks-xom" type="button">Xom javoblar</button>
+      <button id="eks-kundalik" type="button">Kundaliklar</button>
+      <button id="eks-kuzatuv" type="button">Kuzatuv varaqalari</button>
+      <span class="small muted" id="eks-xabar"></span>
+    </div>
+
+    <h2>Parolni almashtirish</h2>
+    <div class="panel" style="max-width:420px">
+      <label class="fld"><span>Yangi parol (kamida 8 belgi)</span>
+        <input type="password" id="yangi-parol" autocomplete="new-password"></label>
+      <div class="amal" style="margin-top:0">
+        <button id="parol-saqla" type="button">Almashtirish</button>
+        <span class="xabar" id="parol-xabar"></span>
+      </div>
+    </div>
+
+    <div class="xabar" id="xabar"></div>
+    <p class="small muted" style="margin-top:20px">Bu sahifada talabalarning ismi ko‘rsatilmaydi, faqat kodlar. Ism va kod mosligi <em>kodlar.xlsx</em> faylida turadi.</p>
+  </section>
 </div>
 
+<script src="umumiy.js"></script>
+<script src="mashgulotlar.js"></script>
 <script>
-/* Baza manzili va ochiq kaliti.
-   Bu ikkisi brauzerda ochiq turishi uchun mo'ljallangan: ular bilan
-   jadvallarni o'qib ham, o'zgartirib ham bo'lmaydi. Faqat ikkita amal
-   ochiq — kod tekshirish va javob saqlash. */
-
-const SB_URL = "https://zbuipyjpyliqqvnmccvu.supabase.co";
-const SB_KEY = "sb_publishable_MJMHFlJ0Oghx0sfRD7zMQg_v-530TK6";
-
-
 (function () {
   "use strict";
 
-  var el = function (id) { return document.getElementById(id); };
-  var mat = function (s) { return document.createTextNode(s); };
-  var malumot = [];
+  var PAROL_KALIT = "admin_parol";
+  var parol = "";
+  var malumot = [], natijalar = null, kundaliklar = [], tayyorgarlik = [], kuzatuvlar = [], kuzatuvchilar = [];
+  var NUQTALAR = ["PRE", "MID", "POST"];
+  var MEZON = ["bilim", "amaliy", "refleksiv", "kasbiy"];
 
-  function sbRpc(nom, tana) {
-    return fetch(SB_URL + "/rest/v1/rpc/" + nom, {
-      method: "POST",
-      headers: {
-        "apikey": SB_KEY,
-        "Authorization": "Bearer " + SB_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(tana || {})
-    }).then(function (r) {
-      return r.text().then(function (t) {
-        var j = null;
-        try { j = JSON.parse(t); } catch (e) {}
-        if (!r.ok) return { xato: "server", body: j };
-        return { ok: true, body: j };
-      });
-    }).catch(function () { return { xato: "tarmoq" }; });
+  function sessiyaOl() { try { return sessionStorage.getItem(PAROL_KALIT) || ""; } catch (e) { return ""; } }
+  function sessiyaYoz(v) { try { if (v) sessionStorage.setItem(PAROL_KALIT, v); else sessionStorage.removeItem(PAROL_KALIT); } catch (e) {} }
+
+  function rpcP(nom, qoshimcha) {
+    var t = { p_parol: parol };
+    if (qoshimcha) Object.keys(qoshimcha).forEach(function (k) { t[k] = qoshimcha[k]; });
+    return sbRpc(nom, t);
   }
 
-  function sana(s) {
-    if (!s) return "";
-    var d = new Date(s);
-    var p = function (x) { return (x < 10 ? "0" : "") + x; };
-    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) +
-           " " + p(d.getHours()) + ":" + p(d.getMinutes());
-  }
-
-  function katak(tr, matni, cls, sarlavha) {
-    var td = document.createElement("td");
-    if (cls) td.className = cls;
-    if (sarlavha) td.title = sarlavha;
-    td.appendChild(mat(matni));
-    tr.appendChild(td);
-    return td;
-  }
-
-  function belgiKatak(tr, bor, vaqt) {
-    var td = document.createElement("td");
-    td.className = "belgi";
-    var sp = document.createElement("span");
-    sp.className = bor ? "bor" : "yoq";
-    sp.appendChild(mat(bor ? "✓" : "—"));
-    if (bor && vaqt) td.title = sana(vaqt);
-    td.appendChild(sp);
-    tr.appendChild(td);
-  }
-
-  function jamlanmaChiz() {
-    var g = {};
-    malumot.forEach(function (r) {
-      if (!g[r.guruh]) g[r.guruh] = { turi: r.turi, jami: 0, pre: 0, mid: 0, post: 0 };
-      var x = g[r.guruh];
-      x.jami++;
-      if (r.pre) x.pre++;
-      if (r.mid) x.mid++;
-      if (r.post) x.post++;
-    });
-    var tb = el("jamlanma");
-    while (tb.firstChild) tb.removeChild(tb.firstChild);
-    var jami = { jami: 0, pre: 0, mid: 0, post: 0 };
-    Object.keys(g).sort().forEach(function (nom) {
-      var x = g[nom];
-      jami.jami += x.jami; jami.pre += x.pre; jami.mid += x.mid; jami.post += x.post;
-      var tr = document.createElement("tr");
-      katak(tr, nom, "kod");
-      var td = document.createElement("td");
-      td.className = "col-turi";
-      var sp = document.createElement("span");
-      sp.className = "chip " + (x.turi === "tajriba" ? "tajriba" : "");
-      sp.appendChild(mat(x.turi));
-      td.appendChild(sp); tr.appendChild(td);
-      katak(tr, String(x.jami), "son");
-      katak(tr, x.pre + " / " + x.jami, "son");
-      katak(tr, x.mid + " / " + x.jami, "son");
-      katak(tr, x.post + " / " + x.jami, "son");
-      tb.appendChild(tr);
-    });
-    var tr = document.createElement("tr");
-    tr.className = "jami";
-    katak(tr, "Jami", "kod");
-    katak(tr, "", "col-turi");
-    katak(tr, String(jami.jami), "son");
-    katak(tr, jami.pre + " / " + jami.jami, "son");
-    katak(tr, jami.mid + " / " + jami.jami, "son");
-    katak(tr, jami.post + " / " + jami.jami, "son");
-    tb.appendChild(tr);
-  }
-
-  function guruhlarniQoy() {
-    var s = el("f-guruh");
-    var bor = {};
-    malumot.forEach(function (r) { bor[r.guruh] = true; });
-    while (s.options.length > 1) s.remove(1);
-    Object.keys(bor).sort().forEach(function (nom) {
-      var o = document.createElement("option");
-      o.value = nom; o.textContent = nom;
-      s.appendChild(o);
+  /* ---------------- kirish ---------------- */
+  function kirish(p) {
+    el("kirish-xabar").textContent = "Tekshirilmoqda…";
+    return sbRpc("admin_kirish", { p_parol: p }).then(function (j) {
+      if (j.xato) { el("kirish-xabar").textContent = xatoMatni(j); return; }
+      if (j.body !== true) { el("kirish-xabar").textContent = "Parol noto‘g‘ri."; sessiyaYoz(""); return; }
+      parol = p; sessiyaYoz(p);
+      el("kirish-xabar").textContent = "";
+      el("e-kirish").hidden = true; el("e-asosiy").hidden = false;
+      yukla();
     });
   }
+  el("kirish").addEventListener("click", function () {
+    var p = el("parol").value;
+    if (!p) { el("kirish-xabar").textContent = "Parolni kiriting."; return; }
+    kirish(p);
+  });
+  el("parol").addEventListener("keydown", function (e) { if (e.key === "Enter") el("kirish").click(); });
+  el("chiqish").addEventListener("click", function () {
+    sessiyaYoz(""); parol = ""; el("parol").value = "";
+    el("e-asosiy").hidden = true; el("e-kirish").hidden = false;
+  });
 
-  function royxatChiz() {
-    var fg = el("f-guruh").value;
-    var fh = el("f-holat").value;
-    var satrlar = malumot.filter(function (r) {
-      if (fg && r.guruh !== fg) return false;
-      if (fh === "PRE")  return !r.pre;
-      if (fh === "MID")  return !r.mid;
-      if (fh === "POST") return !r.post;
-      if (fh === "tugatgan") return r.pre && r.mid && r.post;
-      return true;
-    });
-
-    var tb = el("royxat");
-    while (tb.firstChild) tb.removeChild(tb.firstChild);
-    if (!satrlar.length) {
-      var tr0 = document.createElement("tr");
-      var td0 = document.createElement("td");
-      td0.colSpan = 5; td0.className = "bosh";
-      td0.appendChild(mat("Bu shartga mos talaba yo‘q."));
-      tr0.appendChild(td0); tb.appendChild(tr0);
-    } else {
-      satrlar.forEach(function (r) {
-        var tr = document.createElement("tr");
-        katak(tr, r.kod, "kod");
-        katak(tr, r.guruh, "");
-        belgiKatak(tr, r.pre, r.pre_sana);
-        belgiKatak(tr, r.mid, r.mid_sana);
-        belgiKatak(tr, r.post, r.post_sana);
-        tb.appendChild(tr);
-      });
-    }
-    el("soni").textContent = satrlar.length + " ta ko‘rsatildi";
-  }
-
+  /* ---------------- yuklash ---------------- */
   function yukla() {
     natijalar = null;
     el("yangila").disabled = true;
     el("xabar").textContent = "";
     el("yangilandi").textContent = "Yuklanmoqda…";
-    sbRpc("admin_holat").then(function (j) {
+    Promise.all([
+      rpcP("admin_holat_p"), rpcP("admin_kundaliklar"), rpcP("admin_tayyorgarlik"),
+      rpcP("admin_kuzatuvlar"), rpcP("admin_kuzatuvchilar"), sbRpc("platforma_holat", {})
+    ]).then(function (r) {
       el("yangila").disabled = false;
-      if (j.xato) {
+      var xato = r.filter(function (x) { return x.xato; })[0];
+      if (xato) {
         el("yangilandi").textContent = "";
-        el("xabar").textContent = j.xato === "tarmoq"
-          ? "Internetga ulanib bo‘lmadi. Aloqani tekshirib, Yangilash tugmasini bosing."
-          : "Server javob bermadi. Birozdan keyin Yangilash tugmasini bosing.";
+        el("xabar").textContent = xatoMatni(xato) + " Agar xato takrorlansa, SQL fayl to‘liq ishga tushirilganini tekshiring.";
         return;
       }
-      malumot = j.body || [];
-      el("yangilandi").textContent =
-        malumot.length + " ta talaba · oxirgi yangilanish " + sana(new Date().toISOString());
+      malumot = r[0].body || [];
+      kundaliklar = r[1].body || [];
+      tayyorgarlik = r[2].body || [];
+      kuzatuvlar = r[3].body || [];
+      kuzatuvchilar = r[4].body || [];
+      sozlamaChiz(r[5].body || {});
+      el("yangilandi").textContent = malumot.length + " ta talaba · " + kundaliklar.length + " ta kundalik · " +
+        kuzatuvlar.length + " ta kuzatuv varaqasi · " + sanaMatn(new Date().toISOString());
       guruhlarniQoy();
       jamlanmaChiz();
+      kundalikJadval();
+      kuzatuvJamlanma();
+      kuzatuvchilarChiz();
       royxatChiz();
     });
   }
+  el("yangila").addEventListener("click", yukla);
 
-  var natijalar = null;
+  /* ---------------- sozlamalar ---------------- */
+  (function () {
+    var s = el("ochiq");
+    for (var i = 1; i <= 12; i++) { var o = document.createElement("option"); o.value = String(i); o.textContent = String(i); s.appendChild(o); }
+  })();
 
+  function sozlamaChiz(s) {
+    var faol = (s.faol_nuqtalar || "").split(",");
+    var q = el("nuqtalar").querySelectorAll("input");
+    for (var i = 0; i < q.length; i++) q[i].checked = faol.indexOf(q[i].value) >= 0;
+    if (s.ochiq_mashgulot) el("ochiq").value = String(s.ochiq_mashgulot);
+  }
+
+  function sozla(kalit, qiymat, xabarEl) {
+    xabarEl.className = "xabar"; xabarEl.textContent = "Saqlanmoqda…";
+    rpcP("admin_sozla", { p_kalit: kalit, p_qiymat: qiymat }).then(function (j) {
+      if (j.xato) { xabarEl.textContent = xatoMatni(j); return; }
+      if (j.body === "saqlandi") { xabarEl.className = "xabar ok"; xabarEl.textContent = "Saqlandi."; }
+      else if (j.body === "parol_xato") xabarEl.textContent = "Parol eskirgan. Qayta kiring.";
+      else xabarEl.textContent = "Qiymat noto‘g‘ri.";
+    });
+  }
+  el("nuqta-saqla").addEventListener("click", function () {
+    var q = el("nuqtalar").querySelectorAll("input"), v = [];
+    for (var i = 0; i < q.length; i++) if (q[i].checked) v.push(q[i].value);
+    sozla("faol_nuqtalar", v.join(","), el("nuqta-xabar"));
+  });
+  el("ochiq-saqla").addEventListener("click", function () { sozla("ochiq_mashgulot", el("ochiq").value, el("ochiq-xabar")); });
+
+  /* ---------------- jadvallar ---------------- */
+  function katak(tr, matni, cls) {
+    var td = document.createElement("td");
+    if (cls) td.className = cls;
+    td.appendChild(document.createTextNode(matni === undefined || matni === null ? "" : String(matni)));
+    tr.appendChild(td); return td;
+  }
+  function bosh(tb, n, matn) {
+    tozala(tb);
+    var tr = document.createElement("tr"), td = katak(tr, matn, "bosh"); td.colSpan = n; tb.appendChild(tr);
+  }
+
+  function guruhlarJami() {
+    var g = {};
+    malumot.forEach(function (r) {
+      if (!g[r.guruh]) g[r.guruh] = { turi: r.turi, jami: 0, pre: 0, mid: 0, post: 0 };
+      var x = g[r.guruh]; x.jami++;
+      if (r.pre) x.pre++; if (r.mid) x.mid++; if (r.post) x.post++;
+    });
+    return g;
+  }
+
+  function jamlanmaChiz() {
+    var g = guruhlarJami(), tb = el("jamlanma");
+    if (!Object.keys(g).length) { bosh(tb, 7, "Talabalar topilmadi."); return; }
+    tozala(tb);
+    var j = { jami: 0, pre: 0, mid: 0, post: 0 };
+    Object.keys(g).sort().forEach(function (nom) {
+      var x = g[nom]; j.jami += x.jami; j.pre += x.pre; j.mid += x.mid; j.post += x.post;
+      var tr = document.createElement("tr");
+      katak(tr, nom, "kod");
+      var td = katak(tr, ""); var sp = yarat("span", "chip" + (x.turi === "tajriba" ? " bor" : ""), x.turi || ""); td.appendChild(sp);
+      katak(tr, muassasa(nom));
+      katak(tr, x.jami, "son");
+      katak(tr, x.pre + " / " + x.jami, "son"); katak(tr, x.mid + " / " + x.jami, "son"); katak(tr, x.post + " / " + x.jami, "son");
+      tb.appendChild(tr);
+    });
+    var tr = document.createElement("tr"); tr.className = "jami";
+    katak(tr, "Jami"); katak(tr, ""); katak(tr, ""); katak(tr, j.jami, "son");
+    katak(tr, j.pre + " / " + j.jami, "son"); katak(tr, j.mid + " / " + j.jami, "son"); katak(tr, j.post + " / " + j.jami, "son");
+    tb.appendChild(tr);
+  }
+
+  function kundalikJadval() {
+    var t = el("kundalik-jadval"); tozala(t);
+    var g = guruhlarJami();
+    var tajriba = Object.keys(g).filter(function (n) { return tajribaGuruhimi(n); }).sort();
+    var th = document.createElement("thead"), tr = document.createElement("tr");
+    var h = document.createElement("th"); h.textContent = "Guruh"; tr.appendChild(h);
+    for (var i = 1; i <= 12; i++) { h = document.createElement("th"); h.className = "son"; h.textContent = i; tr.appendChild(h); }
+    th.appendChild(tr); t.appendChild(th);
+    var tb = document.createElement("tbody"); t.appendChild(tb);
+    if (!tajriba.length) { bosh(tb, 13, "Tajriba guruhlari topilmadi."); return; }
+    tajriba.forEach(function (nom) {
+      var r = document.createElement("tr");
+      katak(r, nom, "kod");
+      for (var n = 1; n <= 12; n++) {
+        var k = kundaliklar.filter(function (x) { return x.guruh === nom && x.mashgulot === n; }).length;
+        var tk = {}; tayyorgarlik.forEach(function (x) { if (x.guruh === nom && x.mashgulot === n) tk[x.kod] = 1; });
+        var tsoni = Object.keys(tk).length;
+        katak(r, (k || tsoni) ? k + "/" + g[nom].jami + " (" + tsoni + ")" : "—", "son");
+      }
+      tb.appendChild(r);
+    });
+  }
+
+  function kuzatuvJamlanma() {
+    var g = guruhlarJami(), tb = el("kuzatuv-jamlanma");
+    if (!Object.keys(g).length) { bosh(tb, 5, "Talabalar topilmadi."); return; }
+    tozala(tb);
+    Object.keys(g).sort().forEach(function (nom) {
+      var tr = document.createElement("tr");
+      katak(tr, nom, "kod"); katak(tr, g[nom].jami, "son");
+      NUQTALAR.forEach(function (p) {
+        var n = kuzatuvlar.filter(function (x) { return x.guruh === nom && x.nuqta === p; }).length;
+        katak(tr, n + " / " + g[nom].jami, "son");
+      });
+      tb.appendChild(tr);
+    });
+  }
+
+  function kuzatuvchilarChiz() {
+    var tb = el("kuzatuvchilar");
+    if (!kuzatuvchilar.length) { bosh(tb, 4, "Hali kuzatuvchi kodi yaratilmagan."); return; }
+    tozala(tb);
+    var asos = location.href.replace(/admin\.html.*$/, "kuzatuv.html");
+    kuzatuvchilar.forEach(function (k) {
+      var tr = document.createElement("tr");
+      katak(tr, k.kod, "kod"); katak(tr, k.izoh || ""); katak(tr, k.soni, "son");
+      var td = katak(tr, "");
+      var a = yarat("a", "", "nusxalash uchun havola"); a.href = asos + "?k=" + encodeURIComponent(k.kod); a.target = "_blank";
+      td.appendChild(a);
+      tb.appendChild(tr);
+    });
+  }
+  el("kz-qosh").addEventListener("click", function () {
+    var izoh = el("kz-izoh").value.trim();
+    if (!izoh) { el("kz-xabar").textContent = "Izoh yozing: kim va qaysi maktab."; return; }
+    el("kz-xabar").className = "xabar"; el("kz-xabar").textContent = "Yaratilmoqda…";
+    rpcP("admin_kuzatuvchi_qosh", { p_izoh: izoh }).then(function (j) {
+      if (j.xato || !j.body) { el("kz-xabar").textContent = j.xato ? xatoMatni(j) : "Yaratilmadi."; return; }
+      el("kz-xabar").className = "xabar ok"; el("kz-xabar").textContent = "Yangi kod: " + j.body;
+      el("kz-izoh").value = "";
+      rpcP("admin_kuzatuvchilar").then(function (r) { if (r.ok) { kuzatuvchilar = r.body || []; kuzatuvchilarChiz(); } });
+    });
+  });
+
+  function guruhlarniQoy() {
+    var s = el("f-guruh"), bor = {};
+    malumot.forEach(function (r) { bor[r.guruh] = true; });
+    while (s.options.length > 1) s.remove(1);
+    Object.keys(bor).sort().forEach(function (nom) { var o = document.createElement("option"); o.value = nom; o.textContent = nom; s.appendChild(o); });
+  }
+
+  function belgiKatak(tr, bor, sarlavha) {
+    var td = katak(tr, "", "belgi");
+    var sp = yarat("span", bor ? "bor" : "yoq", bor ? "✓" : "—");
+    if (sarlavha) td.title = sarlavha;
+    td.appendChild(sp);
+  }
+
+  function royxatChiz() {
+    var fg = el("f-guruh").value, fh = el("f-holat").value;
+    var satrlar = malumot.filter(function (r) {
+      if (fg && r.guruh !== fg) return false;
+      if (fh === "PRE") return !r.pre;
+      if (fh === "MID") return !r.mid;
+      if (fh === "POST") return !r.post;
+      if (fh === "tugatgan") return r.pre && r.mid && r.post;
+      return true;
+    });
+    var tb = el("royxat");
+    if (!satrlar.length) { bosh(tb, 7, "Bu shartga mos talaba yo‘q."); el("soni").textContent = ""; return; }
+    tozala(tb);
+    satrlar.forEach(function (r) {
+      var tr = document.createElement("tr");
+      katak(tr, r.kod, "kod"); katak(tr, r.guruh);
+      belgiKatak(tr, r.pre, sanaMatn(r.pre_sana)); belgiKatak(tr, r.mid, sanaMatn(r.mid_sana)); belgiKatak(tr, r.post, sanaMatn(r.post_sana));
+      katak(tr, kundaliklar.filter(function (x) { return x.kod === r.kod; }).length, "son");
+      var kz = kuzatuvlar.filter(function (x) { return x.talaba_kod === r.kod; }).map(function (x) { return x.nuqta; });
+      katak(tr, kz.length ? kz.join(", ") : "—", "belgi");
+      tb.appendChild(tr);
+    });
+    el("soni").textContent = satrlar.length + " ta ko‘rsatildi";
+  }
+  el("f-guruh").addEventListener("change", royxatChiz);
+  el("f-holat").addEventListener("change", royxatChiz);
+
+  /* ---------------- eksport ---------------- */
   function csvKatak(v) {
     if (v === null || v === undefined) return "";
     var t = String(v);
-    return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+    return /[",\n\r;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
   }
   function csvQator(a) { return a.map(csvKatak).join(","); }
-
-  function bugun() {
-    var d = new Date(), p = function (x) { return (x < 10 ? "0" : "") + x; };
-    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
-  }
-
+  function bugun() { return sanaMatn(new Date().toISOString()).slice(0, 10); }
   function yuklab(nom, matn) {
-    var blob = new Blob(["\ufeff" + matn], { type: "text/csv;charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url; a.download = nom;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () { URL.revokeObjectURL(url); if (a.parentNode) a.parentNode.removeChild(a); }, 200);
+    var blob = new Blob(["﻿" + matn], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = nom; document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); if (a.parentNode) a.parentNode.removeChild(a); }, 300);
   }
-
-  var NUQTALAR = ["PRE", "MID", "POST"];
-  var MEZON = ["bilim", "amaliy", "refleksiv", "kasbiy"];
+  function daraja(foiz) {
+    if (foiz === null || foiz === undefined || foiz === "") return "";
+    var f = Number(foiz); if (isNaN(f)) return "";
+    return f <= 33 ? "past" : (f <= 66 ? "orta" : "yuqori");
+  }
 
   function tahlilCsv() {
-    var bosh = ["kod", "guruh", "turi", "topshirgan"];
+    var bosh = ["kod", "guruh", "muassasa", "turi", "topshirgan"];
     NUQTALAR.forEach(function (p) {
-      MEZON.forEach(function (m) {
-        bosh.push(p.toLowerCase() + "_" + m + "_ball", p.toLowerCase() + "_" + m + "_foiz");
-      });
+      MEZON.forEach(function (m) { var b = p.toLowerCase() + "_" + m; bosh.push(b + "_ball", b + "_foiz", b + "_daraja"); });
     });
+    NUQTALAR.forEach(function (p) { bosh.push("kuzatuv_" + p.toLowerCase() + "_ortacha", "kuzatuv_" + p.toLowerCase() + "_bandlar"); });
+    bosh.push("kundalik_soni", "tekshiruv_ortacha_foiz");
+
     var xarita = {};
-    natijalar.forEach(function (r) { xarita[r.kod + "|" + r.nuqta] = r; });
+    (natijalar || []).forEach(function (r) { xarita[r.kod + "|" + r.nuqta] = r; });
+    var kz = {}; kuzatuvlar.forEach(function (r) { kz[r.talaba_kod + "|" + r.nuqta] = r; });
 
     var satrlar = [csvQator(bosh)];
     malumot.forEach(function (t) {
-      var qator = [t.kod, t.guruh, t.turi];
-      var soni = 0;
+      var q = [t.kod, t.guruh, muassasa(t.guruh), t.turi], soni = 0;
       NUQTALAR.forEach(function (p) { if (xarita[t.kod + "|" + p]) soni++; });
-      qator.push(soni);
+      q.push(soni);
       NUQTALAR.forEach(function (p) {
         var r = xarita[t.kod + "|" + p];
         MEZON.forEach(function (m) {
-          qator.push(r ? r[m + "_ball"] : "");
-          qator.push(r ? r[m + "_foiz"] : "");
+          q.push(r ? r[m + "_ball"] : ""); q.push(r ? r[m + "_foiz"] : ""); q.push(r ? daraja(r[m + "_foiz"]) : "");
         });
       });
-      satrlar.push(csvQator(qator));
+      NUQTALAR.forEach(function (p) { var r = kz[t.kod + "|" + p]; q.push(r ? r.ortacha : ""); q.push(r ? r.baholangan : ""); });
+      q.push(kundaliklar.filter(function (x) { return x.kod === t.kod; }).length);
+      var ty = {}; tayyorgarlik.forEach(function (x) { if (x.kod === t.kod) ty[x.mashgulot] = x; });  /* har mashg'ulotning oxirgi urinishi */
+      var tl = Object.keys(ty).map(function (k) { return ty[k].togri / ty[k].jami; });
+      q.push(tl.length ? Math.round(tl.reduce(function (a, b) { return a + b; }, 0) / tl.length * 100) : "");
+      satrlar.push(csvQator(q));
     });
     return satrlar.join("\n");
   }
 
   function xomCsv() {
-    var bosh = ["kod", "guruh", "turi", "nuqta", "sana"];
+    var bosh = ["kod", "guruh", "muassasa", "turi", "nuqta", "sana"];
     for (var i = 1; i <= 45; i++) bosh.push("j" + i);
-    var satrlar = [csvQator(bosh)];
+    var s = [csvQator(bosh)];
     natijalar.forEach(function (r) {
-      var qator = [r.kod, r.guruh, r.turi, r.nuqta, sana(r.yakunlangan)];
-      for (var i = 1; i <= 45; i++) {
-        var v = r.javoblar ? r.javoblar[String(i)] : "";
-        qator.push(v === undefined || v === null ? "" : v);
-      }
-      satrlar.push(csvQator(qator));
+      var q = [r.kod, r.guruh, muassasa(r.guruh), r.turi, r.nuqta, sanaMatn(r.yakunlangan)];
+      for (var i = 1; i <= 45; i++) { var v = r.javoblar ? r.javoblar[String(i)] : ""; q.push(v === undefined || v === null ? "" : v); }
+      s.push(csvQator(q));
     });
-    return satrlar.join("\n");
+    return s.join("\n");
+  }
+
+  function kundalikCsv() {
+    var bosh = ["kod", "guruh", "muassasa", "mashgulot", "topshiriq"];
+    KUNDALIK_BOSQICHLARI.forEach(function (b) { bosh.push(b.id); });
+    bosh.push("qiyos", "belgilar_soni", "yaratilgan", "yangilangan");
+    var s = [csvQator(bosh)];
+    kundaliklar.forEach(function (r) {
+      var j = r.javoblar || {}, uz = 0;
+      var q = [r.kod, r.guruh, muassasa(r.guruh), r.mashgulot, r.topshiriq || ""];
+      KUNDALIK_BOSQICHLARI.forEach(function (b) { var v = j[b.id] || ""; uz += v.length; q.push(v); });
+      q.push(j.qiyos || "", uz, sanaMatn(r.yaratilgan), sanaMatn(r.yangilangan));
+      s.push(csvQator(q));
+    });
+    return s.join("\n");
+  }
+
+  function kuzatuvCsv() {
+    var bosh = ["kod", "guruh", "muassasa", "nuqta", "kuzatuvchi", "maktab", "sinf", "darslar_soni"];
+    for (var i = 1; i <= 15; i++) bosh.push("b" + i);
+    bosh.push("baholangan", "yigindi", "ortacha", "izoh", "sana");
+    var s = [csvQator(bosh)];
+    kuzatuvlar.forEach(function (r) {
+      var q = [r.talaba_kod, r.guruh, muassasa(r.guruh), r.nuqta, r.kuzatuvchi_kod, r.maktab, r.sinf, r.darslar_soni];
+      for (var i = 1; i <= 15; i++) { var v = r.bandlar ? r.bandlar[String(i)] : ""; q.push(v === "N" ? "" : v); }
+      q.push(r.baholangan, r.yigindi, r.ortacha, r.izoh || "", sanaMatn(r.vaqt));
+      s.push(csvQator(q));
+    });
+    return s.join("\n");
   }
 
   function natijalarniOl() {
     if (natijalar) return Promise.resolve(true);
-    return sbRpc("admin_natijalar").then(function (j) {
-      if (j.xato) return false;
-      natijalar = j.body || [];
-      return true;
-    });
+    return rpcP("admin_natijalar_p").then(function (j) { if (j.xato) return false; natijalar = j.body || []; return true; });
   }
 
   function eksport(tur) {
-    el("eks-xabar").textContent = "Tayyorlanmoqda\u2026";
-    el("eks-tahlil").disabled = true; el("eks-xom").disabled = true;
+    var tugmalar = ["eks-tahlil", "eks-xom", "eks-kundalik", "eks-kuzatuv"];
+    tugmalar.forEach(function (t) { el(t).disabled = true; });
+    el("eks-xabar").textContent = "Tayyorlanmoqda…";
     natijalarniOl().then(function (ok) {
-      el("eks-tahlil").disabled = false; el("eks-xom").disabled = false;
-      if (!ok) {
-        el("eks-xabar").textContent = "Ma\u2019lumotni olib bo\u2018lmadi. Qayta urinib ko\u2018ring.";
-        return;
-      }
-      if (tur === "tahlil") {
-        yuklab("tahlil-" + bugun() + ".csv", tahlilCsv());
-        el("eks-xabar").textContent = malumot.length + " ta talaba, " + natijalar.length + " ta topshiriq.";
-      } else {
-        if (!natijalar.length) {
-          el("eks-xabar").textContent = "Hozircha topshirilgan javob yo\u2018q.";
-          return;
-        }
-        yuklab("xom-javoblar-" + bugun() + ".csv", xomCsv());
-        el("eks-xabar").textContent = natijalar.length + " ta topshiriq yuklandi.";
-      }
+      tugmalar.forEach(function (t) { el(t).disabled = false; });
+      if (!ok) { el("eks-xabar").textContent = "Ma’lumotni olib bo‘lmadi. Qayta urinib ko‘ring."; return; }
+      if (tur === "tahlil") { yuklab("tahlil-" + bugun() + ".csv", tahlilCsv()); el("eks-xabar").textContent = malumot.length + " ta talaba."; }
+      else if (tur === "xom") { yuklab("xom-javoblar-" + bugun() + ".csv", xomCsv()); el("eks-xabar").textContent = natijalar.length + " ta topshiriq."; }
+      else if (tur === "kundalik") { yuklab("kundaliklar-" + bugun() + ".csv", kundalikCsv()); el("eks-xabar").textContent = kundaliklar.length + " ta kundalik."; }
+      else { yuklab("kuzatuv-" + bugun() + ".csv", kuzatuvCsv()); el("eks-xabar").textContent = kuzatuvlar.length + " ta varaqa."; }
     });
   }
-
   el("eks-tahlil").addEventListener("click", function () { eksport("tahlil"); });
   el("eks-xom").addEventListener("click", function () { eksport("xom"); });
+  el("eks-kundalik").addEventListener("click", function () { eksport("kundalik"); });
+  el("eks-kuzatuv").addEventListener("click", function () { eksport("kuzatuv"); });
 
-  el("yangila").addEventListener("click", yukla);
-  el("f-guruh").addEventListener("change", royxatChiz);
-  el("f-holat").addEventListener("change", royxatChiz);
-  yukla();
+  /* ---------------- parol ---------------- */
+  el("parol-saqla").addEventListener("click", function () {
+    var y = el("yangi-parol").value;
+    el("parol-xabar").className = "xabar";
+    if (y.length < 8) { el("parol-xabar").textContent = "Kamida 8 belgi bo‘lsin."; return; }
+    rpcP("admin_parol_almashtir", { p_yangi: y }).then(function (j) {
+      if (j.xato) { el("parol-xabar").textContent = xatoMatni(j); return; }
+      if (j.body === true) {
+        parol = y; sessiyaYoz(y); el("yangi-parol").value = "";
+        el("parol-xabar").className = "xabar ok"; el("parol-xabar").textContent = "Parol almashtirildi.";
+      } else el("parol-xabar").textContent = "Almashtirilmadi.";
+    });
+  });
+
+  var saqlangan = sessiyaOl();
+  if (saqlangan) kirish(saqlangan);
 })();
 </script>
 </body>
